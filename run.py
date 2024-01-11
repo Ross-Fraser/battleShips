@@ -16,3 +16,25 @@ instructions = """ 1. Select a board size either 5x5 or the original 8x8.
     
 welcome_screen()
 print(instructions)
+
+class battleShipBoard:
+    """
+    This class creates a board for the game.
+    """
+    def __init__(self, board_size):
+      """
+      This function sets the size of the board.
+      """
+      self.board_size = board_size
+      self.board = [[0] * board_size for _ in range(board_size)]
+
+    def print_board(self):
+      """
+      This function prints the board.
+      """
+      for row in self.board:
+         print(row)
+              
+board_size = 5
+x = battleShipBoard(board_size)
+x.print_board()
