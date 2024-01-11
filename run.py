@@ -27,6 +27,22 @@ class battleShipBoard:
         """
         This function sets the size of the board.
         """
+        try:
+            if board_size not in [5, 8]:
+                raise ValueError("The size of the board must be 5 or 8.")
+        except ValueError as e:
+            print(f"Invalid data: {e}, please try again.\n")
+            
+            while True:
+                try:
+                    board_size = int(input("Enter board size 5 or 8: "))
+                    if board_size not in [5, 8]:
+                        raise ValueError("The size of the board must be 5 or 8.")
+                    break
+                except ValueError as e:
+                    print(f"Invalid data: {e}, please try again.\n")
+                    
+
         self.board_size = board_size
         self.board = [[0] * board_size for _ in range(board_size)]
 
