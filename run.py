@@ -38,6 +38,7 @@ class battleShipBoard:
             print(row)
 
 
-board_size = 5
+board_size = int(input("Enter board size 5 or 8: "))
 x = battleShipBoard(board_size)
+print(board_size)
 x.print_board()
