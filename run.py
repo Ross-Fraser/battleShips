@@ -1,3 +1,7 @@
+import random
+
+
+
 def welcome_screen():
     """
     This function displays a welcome message to the user.
@@ -62,3 +66,58 @@ while True:
 
 print(boards)
 x.print_board()
+
+def create_ships(board_size):
+    """
+    This function creates ships of different sizes with user input for locations.
+    """
+    ships = []
+    if board_size == 5:
+        ship_sizes = [2, 3, 3]
+        row_range = range(1, 5)
+        col_range = ['A', 'B', 'C', 'D', 'E']
+    elif board_size == 8:
+        ship_sizes = [2, 3, 3, 4, 5]
+        row_range = range(1, 9)
+        col_range = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+    else:
+        raise ValueError("Unsupported board size")
+
+    for size in ship_sizes:
+        ship = get_user_ship_input(board_size, size, row_range, col_range)
+        ships.append(ship)
+
+    return ships
+
+def get_user_ship_input(board_size, ship_size, row_range, col_range):
+    """
+    This function prompts the user to input the location of a ship.
+    """
+    print(f"Enter the details for a ship location of size {ship_size}:\n")
+    
+    while True:
+        try:
+            orientation = input("Enter orientation (horizontal or vertical): ").lower()
+            if orientation not in ['horizontal', 'vertical']:
+                raise ValueError("Please enter 'horizontal' or 'vertical'.")
+            
+            start_row = int(input(f"Enter starting row ({min(row_range)} to {max(row_range)}): "))
+            start_col = input(f"Enter starting column ({min(col_range)} to {max(col_range)}): ").upper()
+
+            if start_row not in row_range or start_col not in col_range:
+                raise ValueError("Please enter a valid row or column values.")
+
+            if orientation == 'horizontal':
+                ship = [(start_row, col) for col in range(col_range.index(start_col), col_range.index(start_col) + ship_size)]
+            else:
+                ship = [(row, col_range.index(start_col)) for row in range(start_row, start_row + ship_size)]
+
+            return ship
+
+        except ValueError as e:
+            print(f"Invalid input: {e}.\n")
+
+# Example usage:
+board_size = 8
+ships = create_ships(board_size)
+print(ships)
