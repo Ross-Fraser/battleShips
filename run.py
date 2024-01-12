@@ -19,41 +19,44 @@ welcome_screen()
 print(instructions)
 
 
-class battleShipBoard:
+class BattleShipBoard:
     """
     This class creates a board for the game.
     """
-    def __init__(self, board_size):
+    def __init__(self, boards):
         """
         This function sets the size of the board.
         """
         try:
-            if board_size not in [5, 8]:
-                raise ValueError("The size of the board must be 5 or 8.")
+            boards = int(boards)
+            if boards not in [5, 8]:
+                raise ValueError("The board must be 5 or 8, please try again.")
         except ValueError as e:
-            print(f"Invalid data: {e}, please try again.\n")
+            raise ValueError(f"{e}")
 
-            while True:
-                try:
-                    board_size = int(input("Enter board size 5 or 8: "))
-                    if board_size not in [5, 8]:
-                        raise ValueError("The board must be 5 or 8.")
-                    break
-                except ValueError as e:
-                    print(f"Invalid data: {e}, please try again.\n")
-
-        self.board_size = board_size
-        self.board = [[0] * board_size for _ in range(board_size)]
+        self.boards = boards
+        self.board = [[0] * boards for _ in range(boards)]
 
     def print_board(self):
         """
-        This function prints the board.
+        This function prints the board to the terminal.
         """
         for row in self.board:
             print(row)
 
 
-board_size = int(input("Enter board size 5 or 8: "))
-x = battleShipBoard(board_size)
-print(board_size)
+"""
+Get the board size from the user input.
+"""
+while True:
+    try:
+        boards = input("Enter board size 5 or 8: ")
+        if not boards.isdigit():
+            raise ValueError("no text or symbols allowed, please try again.")
+        x = BattleShipBoard(boards)
+        break
+    except ValueError as e:
+        print(f"Invalid input: {e}\n")
+
+print(boards)
 x.print_board()
