@@ -77,7 +77,6 @@ while True:
     except ValueError as e:
         print(f"Invalid input: {e}\n")
 
-print(boards)
 x.print_board()
 
 
@@ -138,12 +137,11 @@ def create_ships(board_size):
     for size in ship_sizes:
         ship = get_user_ship_input(board_size, size, row_range, col_range)
         while any(cell in ships for cell in ship):
-            print("Ships cannot overlap. Please re-enter the ship coordinates.\/n")
+            print("Ships cannot overlap. Please re-enter the ship coordinates.\n")
             ship = get_user_ship_input(board_size, size, row_range, col_range)
         ships.extend(ship)
 
     return ships
             
-board_size = 5
-ships = create_ships(board_size)
+ships = create_ships(x.boards)
 print(ships)
