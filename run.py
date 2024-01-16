@@ -153,28 +153,31 @@ def fire_ammo(board, ammo_count):
     for _ in range(ammo_count):
         try:
             target = input("Enter the row and column to fire:").upper()
-            row, col = int(target[:-1]), target[-1]
+            row, col_text = int(target[:-1]), target[-1]
 
-            if row not in range(1, board.boards + 1) or col not in COL_RANGE_8:
-                raise ValueError("Invalid row and column. Please try again.")
+            col_range = [chr(ord('A') + i) for i in range(board.boards)]
+
+            if row not in range(1, board.boards + 1) or col_text not in col_range:
+                raise ValueError(f"Invalid row and or column. Please try again. "
+                                 f"Row should be between 1 and {board.boards}, "
+                                 f"Column should be one of {col_range}.")
 
             print(f"Firing at {target}...")
 
             # Check if the shot hits a ship
-            if (row, COL_RANGE_8.index(col)) in board.ships:
+            col_index = col_range.index(col_text)
+            if (row, col_index) in board.ships:
                 print("Hit!")
-                board.board[row - 1][COL_RANGE_8.index(col)] = "X"
+                board.board[row - 1][col_index] = "X"
             else:
                 print("Miss!")
-                board.board[row - 1][COL_RANGE_8.index(col)] = "*"
+                board.board[row - 1][col_index] = "*"
 
             # Print the updated board
             board.print_board()
 
         except ValueError as e:
             print(f"Invalid input: {e}")
-            print("Please enter valid row and column.")
-            
             
 ships = create_ships(x.boards)
 x.ships = ships
