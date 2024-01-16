@@ -7,6 +7,8 @@ COL_RANGE_5 = ['A', 'B', 'C', 'D', 'E']
 SHIP_SIZES_8 = [2, 3, 3, 4, 5]
 ROW_RANGE_8 = range(1, 9)
 COL_RANGE_8 = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+AMMO_5 = 10
+AMMO_8 = 20
 
 
 def welcome_screen():
@@ -14,7 +16,7 @@ def welcome_screen():
     This function displays a welcome message to the user.
     """
     print("Welcome to BattleShip!\n")
-    print("The goal of the game is to sink all of the ships.\n")
+    print("The goal of the game is to sink all enemy ships.\n")
 
 
 instructions = """ 
@@ -24,12 +26,11 @@ instructions = """
  2. Position your ships on the board.
     i.      Depending on the board you choose, you will have to position 3 or 5 ships (the ships cannot overlap)
     ii.     You can choose to position your ships either horizontal or vertical, but not diagonal.
-    iii.    Enter the row where you want your ship to start.
-    iv.     Enter the column where you want your ship to start.  
- 3. Enter the coordinates of the position you want to attack, using the row and column labels e.g 2C or 7G.
- 4. If you hit a ship, you will be notified. If you miss, you will
-    be notified.
- 5. The game ends when all of the ships are sunk.
+    iii.    You then select the row and column where you want your ship to start from.
+ 3. Let the battle begin!
+    i.      Enter the row and column of the position you want to bomb.
+    ii.     If you hit a ship, you will see an X on the board, otherwise you will see a *.
+ 5. The game ends when all of 1 navies ships are sunk.
     """
 
 welcome_screen()
@@ -80,24 +81,26 @@ while True:
 x.print_board()
 
 
-def get_user_ship_input(board_size, ship_size, row_range, col_range):
+def get_user_ship_coordinates(board_size, ship_size, row_range, col_range):
     """
-    This function prompts the user to input the location of a ship.
+    This function prompts the user to input the row and column of a ship.
     """
             
-    print(f"Enter the details for a ship location of size {ship_size}:\n")
+    print(f"Enter the details for a ship location of size {ship_size}\n")
     
     while True:
         try:
-            orientation = input("Enter orientation (horizontal or vertical): ").lower()
-            if orientation not in ['horizontal', 'vertical']:
-                raise ValueError("Please enter 'horizontal' or 'vertical'.")
+            orientation = input("Enter orientation [H]orizontal or [V]ertical): ").upper()
+            if orientation not in ['H', 'V']:
+                raise ValueError("Please enter 'H' or 'V'.")
             
             start_row = int(input(f"Enter starting row ({min(row_range)} to {max(row_range)}): "))
-            start_col = input(f"Enter starting column ({min(col_range)} to {max(col_range)}): ").upper()
-
+            
             if start_row not in row_range:
                 raise ValueError(f"Please enter a valid row value.")
+            
+            start_col = input(f"Enter starting column ({min(col_range)} to {max(col_range)}): ").upper()
+
             if start_col not in col_range:
                 raise ValueError(f"Please enter a valid column value.")
 
@@ -135,13 +138,44 @@ def create_ships(board_size):
 
     ships = []
     for size in ship_sizes:
-        ship = get_user_ship_input(board_size, size, row_range, col_range)
+        ship = get_user_ship_coordinates(board_size, size, row_range, col_range)
         while any(cell in ships for cell in ship):
-            print("Ships cannot overlap. Please re-enter the ship coordinates.\n")
-            ship = get_user_ship_input(board_size, size, row_range, col_range)
+            print("Ships cannot overlap. Please re-enter the row and column for the ship.\n")
+            ship = get_user_ship_coordinates(board_size, size, row_range, col_range)
         ships.extend(ship)
 
     return ships
+
+def fire_ammo(board, ammo_count):
+    """
+    This function allows the player to fire a specified number of shots on the board.
+    """
+    for _ in range(ammo_count):
+        try:
+            target = input("Enter the row and column to fire:").upper()
+            row, col = int(target[:-1]), target[-1]
+
+            if row not in range(1, board.boards + 1) or col not in COL_RANGE_8:
+                raise ValueError("Invalid row and column. Please try again.")
+
+            print(f"Firing at {target}...")
+
+            # Check if the shot hits a ship
+            if (row, COL_RANGE_8.index(col)) in board.ships:
+                print("Hit!")
+                board.board[row - 1][COL_RANGE_8.index(col)] = "X"
+            else:
+                print("Miss!")
+                board.board[row - 1][COL_RANGE_8.index(col)] = "*"
+
+            # Print the updated board
+            board.print_board()
+
+        except ValueError as e:
+            print(f"Invalid input: {e}")
+            print("Please enter valid row and column.")
+            
             
 ships = create_ships(x.boards)
-print(ships)
+x.ships = ships
+fire_ammo(x, AMMO_5)
