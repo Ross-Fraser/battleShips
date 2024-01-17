@@ -141,7 +141,7 @@ while True:
     try:
         boards = input("Enter board size 5 or 8: ")
         
-        if boards == 'exit':
+        if boards.lower() == 'exit':
             exit_game()
             
             
@@ -168,13 +168,20 @@ def get_user_ship_coordinates(board_size, ship_size, row_range, col_range):
             if orientation not in ['H', 'V']:
                 raise ValueError("Please enter 'H' or 'V'.")
             
+            if orientation.lower() == 'exit':
+                exit_game()
+            
              # Input format: "row, column"
             input_coordinates = input(f"Enter starting row and column: ").upper()
+            
+            if input_coordinates.lower() == 'exit':
+                exit_game()
             
             if len(input_coordinates) != 2 or not input_coordinates.isalnum():
                 raise ValueError("Please enter a valid 2-character alphanumeric coordinate without symbols.")
 
             start_row, start_col = input_coordinates[0], input_coordinates[1]
+            
             
              # Handle both cases where the first character is a letter or a number
             if start_row.isalpha():
