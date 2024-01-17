@@ -53,7 +53,8 @@ class BattleShipBoard:
             raise ValueError(f"{e}")
 
         self.boards = boards
-        self.board = [[0] * boards for _ in range(boards)]
+        self.board = [[' '] * boards for _ in range(boards)]
+        self.ships = []
 
     def print_board(self):
         """
@@ -64,6 +65,74 @@ class BattleShipBoard:
         for i, row in enumerate(self.board):
             print(f"{i + 1:2d} {' '.join(str(cell) for cell in row)}")
 
+    def are_all_ships_sunk(self):
+        """
+        This function checks if all the ships on the board are sunk.
+        """
+        for row in self.board:
+            for cell in row:
+                if cell == "s":
+                    return False
+        return True
+    
+    def place_ships_on_board(self, ships):
+        """
+        This function places ships on the board initially.
+        """
+        for ship in ships:
+            row, col = ship
+            self.board[row - 1][col] = 's'
+        
+        
+def exit_game():
+    """
+    This function allows the user to exit the game.
+    """
+    print("Exiting the game.")
+    exit()
+
+
+def fire_ammo(board, ammo_count):
+    for _ in range(ammo_count):
+        try:
+            target = input("Enter the row and column to fire:").upper()
+            
+            if target.lower() == 'exit':
+                exit_game()
+            
+            row, col_text = int(target[:-1]), target[-1]
+
+            col_range = [chr(ord('A') + i) for i in range(board.boards)]
+
+            if row not in range(1, board.boards + 1) or col_text not in col_range:
+                raise ValueError(f"Invalid row and or column. Please try again. "
+                                 f"Row should be between 1 and {board.boards}, "
+                                 f"Column should be one of {col_range}.")
+
+            print(f"Firing at {target}...")
+
+            col_index = col_range.index(col_text)
+            if (row, col_index) in board.ships:
+                print("Direct Hit!")
+                board.board[row - 1][col_index] = "x"
+            else:
+                print("You Miss!")
+                board.board[row - 1][col_index] = "-"
+
+            board.print_board()
+            
+            # Check if all ships are sunk after each shot
+            if board.are_all_ships_sunk():
+                print("Congratulations! You have sunk all the enemy ships. Game Over!")
+                return
+
+        except ValueError as e:
+            print(f"Invalid input: {e}")
+
+    # If the loop completes without returning, it means the player ran out of ammo
+    print("Out of ammo! Game Over.")
+
+        
 
 """
 Get the board size from the user input.
@@ -71,6 +140,11 @@ Get the board size from the user input.
 while True:
     try:
         boards = input("Enter board size 5 or 8: ")
+        
+        if boards == 'exit':
+            exit_game()
+            
+            
         if not boards.isdigit():
             raise ValueError("no text or symbols allowed, please try again.")
         x = BattleShipBoard(boards)
@@ -145,49 +219,32 @@ def create_ships(board_size):
     else:
         raise ValueError("Invalid board size.")
 
+
     ships = []
+    board = [[' '] * board_size for _ in range(board_size)]  # Initialize an empty board
+    
+    
     for size in ship_sizes:
         ship = get_user_ship_coordinates(board_size, size, row_range, col_range)
         while any(cell in ships for cell in ship):
             print("Ships cannot overlap. Please re-enter the row and column for the ship.\n")
             ship = get_user_ship_coordinates(board_size, size, row_range, col_range)
         ships.extend(ship)
+        
+        # Update the board with 's' at ship positions
+        x.ships = ships
+        for ship in ships:
+            row, col = ship
+            x.board[row - 1][col] = 's'
+
+    print("Ships positioned on the board:\n")
+    print("   " + " ".join(chr(ord('A') + i) for i in range(board_size)))
+    for i, row in enumerate(board):
+        print(f"{i + 1:2d} {' '.join(str(cell) for cell in row)}")
 
     return ships
 
-def fire_ammo(board, ammo_count):
-    """
-    This function allows the player to fire a specified number of shots on the board.
-    """
-    for _ in range(ammo_count):
-        try:
-            target = input("Enter the row and column to fire:").upper()
-            row, col_text = int(target[:-1]), target[-1]
-
-            col_range = [chr(ord('A') + i) for i in range(board.boards)]
-
-            if row not in range(1, board.boards + 1) or col_text not in col_range:
-                raise ValueError(f"Invalid row and or column. Please try again. "
-                                 f"Row should be between 1 and {board.boards}, "
-                                 f"Column should be one of {col_range}.")
-
-            print(f"Firing at {target}...")
-
-            # Check if the shot hits a ship
-            col_index = col_range.index(col_text)
-            if (row, col_index) in board.ships:
-                print("Direct Hit!")
-                board.board[row - 1][col_index] = "X"
-            else:
-                print("You Miss!")
-                board.board[row - 1][col_index] = "*"
-
-            # Print the updated board
-            board.print_board()
-
-        except ValueError as e:
-            print(f"Invalid input: {e}")
-            
 ships = create_ships(x.boards)
 x.ships = ships
+x.place_ships_on_board(ships)
 fire_ammo(x, AMMO_5)
