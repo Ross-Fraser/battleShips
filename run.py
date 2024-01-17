@@ -94,27 +94,36 @@ def get_user_ship_coordinates(board_size, ship_size, row_range, col_range):
             if orientation not in ['H', 'V']:
                 raise ValueError("Please enter 'H' or 'V'.")
             
-            start_row = int(input(f"Enter starting row ({min(row_range)} to {max(row_range)}): "))
+             # Input format: "row, column"
+            input_coordinates = input(f"Enter starting row and column: ").upper()
             
-            if start_row not in row_range:
-                raise ValueError(f"Please enter a valid row value.")
+            if len(input_coordinates) != 2 or not input_coordinates.isalnum():
+                raise ValueError("Please enter a valid 2-character alphanumeric coordinate without symbols.")
+
+            start_row, start_col = input_coordinates[0], input_coordinates[1]
             
-            start_col = input(f"Enter starting column ({min(col_range)} to {max(col_range)}): ").upper()
+             # Handle both cases where the first character is a letter or a number
+            if start_row.isalpha():
+                start_row = row_range.index(start_row.upper()) + 1
+            elif start_row.isdigit():
+                start_row = int(start_row)
+            else:
+                raise ValueError("Invalid row value.")
 
             if start_col not in col_range:
-                raise ValueError(f"Please enter a valid column value.")
-
+                raise ValueError("Invalid column value.")
+            
             if board_size == 5:
-                ship = [(start_row, col) for col in range(col_range.index(start_col), col_range.index(start_col) + ship_size)]
+                ship = [(int(start_row), col) for col in range(col_range.index(start_col), col_range.index(start_col) + ship_size)]
             elif board_size == 8:
-                ship = [(row, col_range.index(start_col)) for row in range(start_row, start_row + ship_size)]
+                ship = [(row, col_range.index(start_col)) for row in range(int(start_row), int(start_row) + ship_size)]
             else:
                 raise ValueError("Invalid board size.")
 
-            if orientation == 'horizontal':
-                ship = [(start_row, col) for col in range(col_range.index(start_col), col_range.index(start_col) + ship_size)]
+            if orientation == 'H':
+                ship = [(int(start_row), col) for col in range(col_range.index(start_col), col_range.index(start_col) + ship_size)]
             else:
-                ship = [(row, col_range.index(start_col)) for row in range(start_row, start_row + ship_size)]
+                ship = [(row, col_range.index(start_col)) for row in range(int(start_row), int(start_row) + ship_size)]
 
             return ship
         
@@ -167,10 +176,10 @@ def fire_ammo(board, ammo_count):
             # Check if the shot hits a ship
             col_index = col_range.index(col_text)
             if (row, col_index) in board.ships:
-                print("Hit!")
+                print("Direct Hit!")
                 board.board[row - 1][col_index] = "X"
             else:
-                print("Miss!")
+                print("You Miss!")
                 board.board[row - 1][col_index] = "*"
 
             # Print the updated board
