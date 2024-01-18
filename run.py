@@ -165,11 +165,10 @@ def get_user_ship_coordinates(board_size, ship_size, row_range, col_range):
     while True:
         try:
             orientation = input("Enter orientation [H]orizontal or [V]ertical): ").upper()
-            if orientation not in ['H', 'V']:
-                raise ValueError("Please enter 'H' or 'V'.")
-            
             if orientation.lower() == 'exit':
                 exit_game()
+            if orientation not in ['H', 'V']:
+                raise ValueError("Please enter 'H' or 'V'.")
             
              # Input format: "row, column"
             input_coordinates = input(f"Enter starting row and column: ").upper()
