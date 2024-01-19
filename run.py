@@ -122,13 +122,26 @@ def fire_ammo(board, ammo_count):
                                  f"Column should be one of {col_range}.")
 
             print(f"Firing at {target}...")
+            
+            col_index = col_range.index(col_text)
+            
+            if board.board[row - 1][col_index] in [Fore.RED + "x", Fore.BLUE +"-"]:
+                fire_option = input("Warning: You are firing at the same location again. Do you want to [F]ire at the same location or [C]hoose another location?").upper()
+
+                if fire_option == 'F':
+                    print("Interesting strategy!")
+                elif fire_option == 'C':
+                    continue
+                else:
+                    print("Choosing another location.")
+                    continue
 
             col_index = col_range.index(col_text)
             if (row, col_index) in board.ships:
                 print("Direct Hit!")
                 board.board[row - 1][col_index] = Fore.RED +"x"
             else:
-                print("You Miss!")
+                print("You Missed!")
                 board.board[row - 1][col_index] = Fore.BLUE +"-"
 
             board.print_board()
