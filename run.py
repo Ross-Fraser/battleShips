@@ -172,7 +172,7 @@ def get_user_ship_coordinates(board_size, ship_size, row_range, col_range):
     This function prompts the user to input the row and column of a ship.
     """
             
-    print(f"Enter the details for a ship location of size {ship_size}\n")
+    print(f"Enter the details for the position of ship size {ship_size}\n")
     
     while True:
         try:
@@ -213,9 +213,15 @@ def get_user_ship_coordinates(board_size, ship_size, row_range, col_range):
                 raise ValueError("Invalid board size.")
 
             if orientation == 'H':
-                ship = [(int(start_row), col) for col in range(col_range.index(start_col), col_range.index(start_col) + ship_size)]
+                end_col = col_range.index(start_col) + ship_size - 1
+                if end_col >= len(col_range):
+                    raise ValueError("Ship goes beyond the board boundaries. Please try again.")
+                ship = [(start_row, col) for col in range(col_range.index(start_col), end_col + 1)]
             else:
-                ship = [(row, col_range.index(start_col)) for row in range(int(start_row), int(start_row) + ship_size)]
+                end_row = start_row + ship_size - 1
+                if end_row > board_size:
+                    raise ValueError("Ship goes beyond the board boundaries. Please try again.")
+                ship = [(row, col_range.index(start_col)) for row in range(start_row, end_row + 1)]
 
             return ship
         
@@ -239,8 +245,6 @@ def create_ships(board_size):
 
 
     ships = []
-    board = [[' '] * board_size for _ in range(board_size)]  # Initialize an empty board
-    
     
     for size in ship_sizes:
         ship = get_user_ship_coordinates(board_size, size, row_range, col_range)
@@ -255,10 +259,9 @@ def create_ships(board_size):
             row, col = ship
             x.board[row - 1][col] = Fore.WHITE + 's'
 
-    print("Ships positioned on the board:\n")
-    print("   " + " ".join(chr(ord('A') + i) for i in range(board_size)))
-    for i, row in enumerate(board):
-        print(f"{i + 1:2d} {' '.join(str(cell) for cell in row)}")
+        print(f"\nBoard after positioning ship size-{size}:\n")
+        x.print_board()
+        print("\n")
 
     return ships
 
