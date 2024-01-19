@@ -1,4 +1,8 @@
+import colorama
+from colorama import Fore, Back, Style
 import random
+
+colorama.init(autoreset=True)
 
 BOARD_SIZES = [5, 8]
 SHIP_SIZES_5 = [2, 3, 3]
@@ -15,7 +19,7 @@ def welcome_screen():
     """
     This function displays a welcome message to the user.
     """
-    print("Welcome to BattleShip!\n")
+    print(Fore.RED + "\nWelcome to BattleShip!\n" + Fore.RESET)
     print("The goal of the game is to sink all enemy ships.\n")
 
 
