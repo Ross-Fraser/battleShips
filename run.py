@@ -19,22 +19,30 @@ def welcome_screen():
     """
     This function displays a welcome message to the user.
     """
-    print(Fore.RED + "\nWelcome to BattleShip!\n" + Fore.RESET)
-    print("The goal of the game is to sink all enemy ships.\n")
+    print(Fore.RED + Back.BLUE + "\nWelcome to BattleShip!\n")
+    print(Fore.RED + "The goal of the game is to sink all enemy ships.\n")
 
 
-instructions = """ 
+instructions =""" 
+Instructions
  1. Select a board size either:
     i.      5 (5x5). which has 3 ships, the sizes are 2, 3 and 3.
-    ii.     The original 8 (8x8). which has 5 ships, the sizes are 2, 3, 3, 4 and 5.
+    ii.     The original 8 (8x8). which has 5 ships, the sizes
+            are 2, 3, 3, 4 and 5.
  2. Position your ships on the board.
-    i.      Depending on the board you choose, you will have to position 3 or 5 ships (the ships cannot overlap)
-    ii.     You can choose to position your ships either horizontal or vertical, but not diagonal.
-    iii.    You then select the row and column where you want your ship to start from.
+    i.      Depending on the board you choose, you will have to
+            position 3 or 5 ships (the ships cannot overlap)
+    ii.     You can choose to position your ships either horizontal
+            or vertical, but not diagonal.
+    iii.    You then select the row and column where you want your
+            ship to start from.
  3. Let the battle begin!
     i.      Enter the row and column of the position you want to bomb.
-    ii.     If you hit a ship, you will see an X on the board, otherwise you will see a *.
- 5. The game ends when all of 1 navies ships are sunk.
+    ii.     If you hit a ship, you will see an X on the board, otherwise
+            you will see a -.
+ 5. The game ends when all of 1 navies ships are sunk or they run out of
+            ammo.
+ 6. To exit the game, type 'exit' at any input prompt.
     """
 
 welcome_screen()
@@ -75,7 +83,7 @@ class BattleShipBoard:
         """
         for row in self.board:
             for cell in row:
-                if cell == "s":
+                if cell == Fore.WHITE + "s":
                     return False
         return True
     
@@ -85,7 +93,7 @@ class BattleShipBoard:
         """
         for ship in ships:
             row, col = ship
-            self.board[row - 1][col] = 's'
+            self.board[row - 1][col] = Fore.WHITE + 's'
         
         
 def exit_game():
@@ -118,10 +126,10 @@ def fire_ammo(board, ammo_count):
             col_index = col_range.index(col_text)
             if (row, col_index) in board.ships:
                 print("Direct Hit!")
-                board.board[row - 1][col_index] = "x"
+                board.board[row - 1][col_index] = Fore.RED +"x"
             else:
                 print("You Miss!")
-                board.board[row - 1][col_index] = "-"
+                board.board[row - 1][col_index] = Fore.BLUE +"-"
 
             board.print_board()
             
@@ -245,7 +253,7 @@ def create_ships(board_size):
         x.ships = ships
         for ship in ships:
             row, col = ship
-            x.board[row - 1][col] = 's'
+            x.board[row - 1][col] = Fore.WHITE + 's'
 
     print("Ships positioned on the board:\n")
     print("   " + " ".join(chr(ord('A') + i) for i in range(board_size)))
