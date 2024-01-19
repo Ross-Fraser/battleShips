@@ -1,1 +1,1 @@
-colorama.txt
+colorama
