@@ -72,7 +72,7 @@ class BattleShipBoard:
         """
         This function prints the board with row and column labels to the terminal.
         """
-        print("   " + " ".join(chr(ord('A') + i) for i in range(self.boards)))
+        print(Fore.WHITE + "\n   " + " ".join(chr(ord('A') + i) for i in range(self.boards)))
 
         for i, row in enumerate(self.board):
             print(f"{i + 1:2d} {' '.join(str(cell) for cell in row)}")
@@ -108,7 +108,7 @@ def fire_ammo(board, ammo_count):
     for shot in range(ammo_count, 0, -1):
         valid_input = False
         try:
-            target = input(f"Enter the row and column to fire (Ammo remaining: {shot}):").upper()
+            target = input(Fore.BLUE + f"Enter the row and column to fire (Ammo remaining: {shot}):").upper()
             
             if target.lower() == 'exit':
                 exit_game()
@@ -141,16 +141,23 @@ def fire_ammo(board, ammo_count):
             
             col_index = col_range.index(col_text)
             
-            if board.board[row - 1][col_index] in [Fore.RED + "x", Fore.BLUE +"-"]:
-                fire_option = input("Warning: You are firing at the same location again. Do you want to [F]ire at the same location or [C]hoose another location?").upper()
+            try:
+                if board.board[row - 1][col_index] in [Fore.RED + "x", Fore.BLUE +"-"]:
+                    fire_option = input(Fore.BLUE + "Warning: You are firing at the same location again. Do you want to [F]ire at the same location or [C]hoose another location?").upper()
 
-                if fire_option == 'F':
-                    print("Interesting strategy!")
-                elif fire_option == 'C':
-                    continue
-                else:
-                    print("Choosing another location.")
-                    continue
+                    if fire_option not in ['F', 'C']:
+                        raise ValueError(Fore.YELLOW + "Please enter 'F' or 'C'.")
+
+                    if fire_option == 'F':
+                        print("Interesting strategy!")
+                    elif fire_option == 'C':
+                        continue
+                    else:
+                        print("Choosing another location.")
+                        continue
+
+            except ValueError as e:
+                print(Fore.YELLOW + f"Invalid input: {e}\n")
 
             col_index = col_range.index(col_text)
             if (row, col_index) in board.ships:
@@ -164,12 +171,14 @@ def fire_ammo(board, ammo_count):
             
             # Check if all ships are sunk after each shot
             if board.are_all_ships_sunk():
-                print("Congratulations! You have sunk all the enemy ships. Game Over!")
+                print(Fore.MAGENTA + "Congratulations! You have sunk all the enemy ships.")
+                print(Fore.MAGENTA + "Game Over!\n")
                 return
 
 
     # If the loop completes without returning, it means the player ran out of ammo
-    print("Out of ammo! Game Over.")
+    print(Fore.MAGENTA + "Out of ammo! You Lose.")
+    print(Fore.MAGENTA + "Game Over!\n")
 
         
 
@@ -178,11 +187,11 @@ Get the board size from the user input.
 """
 while True:
     try:
-        boards = input("Enter board size 5 or 8: ")
+        boards = input(Fore.BLUE + "Enter board size 5 or 8: ") 
         
         if boards.lower() == 'exit':
             exit_game()
-            
+
             
         if not boards.isdigit():
             raise ValueError(Fore.YELLOW + "no text or symbols allowed, please try again.")
@@ -192,6 +201,7 @@ while True:
         print(Fore.YELLOW + f"Invalid input: {e}\n")
 
 x.print_board()
+print("\n")
 
 
 def get_user_ship_coordinates(board_size, ship_size, row_range, col_range):
@@ -199,11 +209,11 @@ def get_user_ship_coordinates(board_size, ship_size, row_range, col_range):
     This function prompts the user to input the row and column of a ship.
     """
             
-    print(f"Enter the details for the position of ship size-{ship_size}\n")
+    print(Fore.BLUE + f"Enter the details for the position of ship size-{ship_size}\n")
     
     while True:
         try:
-            orientation = input("Enter orientation [H]orizontal or [V]ertical): ").upper()
+            orientation = input(Fore.BLUE + "Enter orientation [H]orizontal or [V]ertical): ").upper()
             if orientation.lower() == 'exit':
                 exit_game()
             if orientation not in ['H', 'V']:
