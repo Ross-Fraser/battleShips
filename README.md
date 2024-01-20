@@ -1,32 +1,66 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
 
-Welcome,
+![battleship](assets/images/screenshots/battleship.png)
 
-This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **March 14, 2023**
+# Battleship Game - Solo-Play
 
-## Reminders
+Welcome to the Battleship Game! In this version of the Battleship game, you'll be challenging yourself to strategically place your fleet and guess the locations of your own ships.
 
-- Your code must be placed in the `run.py` file
-- Your dependencies must be placed in the `requirements.txt` file
-- Do not edit any of the other files or your code may not deploy properly
 
-## Creating the Heroku app
+## Contents
 
-When you create the app, you will need to add two buildpacks from the _Settings_ tab. The ordering is as follows:
+* [Design](#design)
+* [Usage](#usage)
+* [Contributing](#contributing)
+* [License](#licence)
 
-1. `heroku/python`
-2. `heroku/nodejs`
+# Features
 
-You must then create a _Config Var_ called `PORT`. Set this to `8000`
+## Design
 
-If you have credentials, such as in the Love Sandwiches project, you must create another _Config Var_ called `CREDS` and paste the JSON into the value field.
+My design process consisted of thinking of each logic step in the game then creating a flowchart detailing the steps as seen below. 
 
-Connect your GitHub repository and deploy as normal.
+![flowchart](flowcharts.png)
 
-## Constraints
+### Playing the Game
 
-The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
+1. Open the game in your web browser.
+2. Select the board size
+3. Position your ships
+4. Attack the ships
 
----
+# Bugs
+## Remaining bugs
 
-Happy coding!
+There is currently 2 bugs which after firing the first round (10 rounds) ValueError displays "Invalid input: Please enter 'F' or 'C'." and also print message "Out of ammo! You Lose.
+Game Over!"
+
+# Validator Testing
+
+- PEP8
+    - No errors were returned from https://pep8ci.herokuapp.com/
+
+
+# Deployment
+
+The site was deployed to Heroku.
+- Create a new Heroku app.
+- Set the config var to Port 8000.
+- Set the buildpacks to Python and NodeJS in that order.
+- Link the Heroku app to the repository.
+- Click on Deploy
+
+
+## Screenshots
+
+The pep8 validator results
+
+![pep8 validator](assets/images/screenshots/pep8_validator.png)
+
+
+## Requirments
+
+The only requirments are that you are running python 3.11 and have colorama.
+
+# Credits
+
+- Code Institute for the deployment terminal.
