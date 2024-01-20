@@ -97,7 +97,7 @@ def exit_game():
 def fire_ammo(board, ammo_count):
     for shot in range(ammo_count, 0, -1):
         try:
-            target = input(Fore.CYAN + "Enter the row and column to fire. (Ammo remaining: {shot}): ").upper()
+            target = input(Fore.CYAN + f"Enter the row and column to fire. (Ammo remaining: {shot}): ").upper()
             
             if target.lower() == 'exit':
                 exit_game()
