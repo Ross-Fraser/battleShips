@@ -1,8 +1,8 @@
+import random
 import colorama
+import string
 from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
-import random
-import string
 
 BOARD_SIZES = [5, 8]
 SHIP_SIZES_5 = [2, 3, 3]
@@ -113,14 +113,12 @@ def fire_ammo(board, ammo_count):
         valid_input = False
         try:
             target = input(Fore.BLUE + f"Please enter the location you want "
-                                       f"to bomb. "
-                                       f"(Ammo remaining: {shot}): ").upper()
-            
-            if target == 'exit':
-                exit_game()
-            
+                           f"to bomb. "
+                           f"(Ammo remaining: {shot}): ").upper()
+
             if len(target) != 2 or not target[0].isdigit() or not target[1].isalpha():
-                raise ValueError(Fore.YELLOW + f"Please enter valid row and column values.")
+                raise ValueError(Fore.YELLOW + f"Please enter valid row "
+                                 f"and column values.")
 
             # Set the flag to indicate valid input
             valid_input = True
@@ -131,7 +129,8 @@ def fire_ammo(board, ammo_count):
             target_column_letter = target[1].upper()
 
             if not (1 <= row <= board.boards) or target_column_letter not in col_range:
-                raise ValueError(Fore.YELLOW + f"Please enter valid row and column values.")
+                raise ValueError(Fore.YELLOW + f"Please enter valid row "
+                                 "and column values.")
 
         except ValueError as e:
             print(e)
@@ -143,31 +142,31 @@ def fire_ammo(board, ammo_count):
             col_index = col_range.index(target_column_letter)
             fire_option = None  # Initialize the variable
 
-            try:
-                if board.board[row - 1][col_index] in [Fore.RED + "x", Fore.BLUE + "-"]:
-                    fire_option = input(Fore.YELLOW + "Warning: You are firing "
-                                      "at the same location again. Do you want to "
-                                      "[F]ire at the same location or "
-                                      "[C]hoose another location?").upper()
+        try:
+            if board.board[row - 1][col_index] in [Fore.RED + "x", Fore.BLUE + "-"]:
+                fire_option = input(Fore.YELLOW + "Warning: You are firing "
+                                    "at the same location again. "
+                                    "Do you want to "
+                                    "[F]ire at the same location or "
+                                    "[C]hoose another location?").upper()
 
-                if fire_option not in ['F', 'C']:
-                    raise ValueError(Fore.YELLOW + "Please enter 'F' "
-                                                   "or 'C'.")
+            if fire_option not in ['F', 'C']:
+                raise ValueError(Fore.YELLOW + "Please enter 'F' "
+                                               "or 'C'.")
 
-                if fire_option == 'F':
-                    print(Fore.CYAN + "Interesting strategy!")
-                elif fire_option == 'C':
-                    
-                    # Decrement the shot if the user chooses to fire again
-                    shot -= 1 # issue here with decrementing the shot
-                    break
-                
-                else:
-                    break  # Break out of the loop if the input is invalid
+            if fire_option == 'F':
+                print(Fore.CYAN + "Interesting strategy!")
+            elif fire_option == 'C':
 
-            except ValueError as e:
-                print(Fore.YELLOW + f"Invalid input: {e}\n")
+                # Decrement the shot if the user chooses to fire again
+                shot -= 1  # issue here with decrementing the shot
+                break
 
+            else:
+                break  # Break out of the loop if the input is invalid
+
+        except ValueError as e:
+            print(Fore.YELLOW + f"Invalid input: {e}\n")
 
             col_index = col_range.index(target_column_letter)
             if (row, col_index) in board.ships:
@@ -184,11 +183,10 @@ def fire_ammo(board, ammo_count):
                 print(Fore.MAGENTA + "Congratulations! You have sunk all "
                                      "the enemy ships.")
                 print(Fore.MAGENTA + "Game Over!\n")
-                break
+                continue
             else:
                 print(Fore.MAGENTA + "Out of ammo! You Lose.")
                 print(Fore.MAGENTA + "Game Over!\n")
-
 
 
 """
@@ -314,8 +312,8 @@ def create_ships(board_size, ammo):
     ships = []
 
     for size in ship_sizes:
-        ship = get_user_ship_coordinates \
-        (board_size, size, row_range, col_range)
+        ship = get_user_ship_coordinates(board_size, size,
+                                         row_range, col_range)
         while any(cell in ships for cell in ship):
             print(Fore.YELLOW + "Ships cannot overlap. "
                                 "Please re-enter the row and column "
