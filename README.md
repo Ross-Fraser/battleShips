@@ -3,7 +3,7 @@
 
 # Battleship Game - Solo-Play
 
-Welcome to the Battleship Game! In this version of the Battleship game, you'll be challenging yourself to strategically place your fleet and guess the locations of your own ships.
+Welcome to the Battleship Game! In this version of the Battleship game, you'll be challenging yourself to strategically place your fleet and take shots firing at the locations of the ships.
 
 
 ## Contents
@@ -28,17 +28,18 @@ My design process consisted of thinking of each logic step in the game then crea
 3. Position your ships
 4. Attack the ships
 
-# Bugs
-## Remaining bugs
+# Testing
 
-There is currently 2 bugs which after firing the first round (10 rounds) ValueError displays "Invalid input: Please enter 'F' or 'C'." and also print message "Out of ammo! You Lose.
-Game Over!"
+I have manually tested this project by:
 
-# Validator Testing
+- I tested in my local terminal and on the Code Institute Heroku app.
+- Passed the code through the pep8 validator.
+- Gave invalid inputs: where numbers were expected I gave text and symbols and vis versa.
+
+## Validator Testing
 
 - PEP8
     - No errors were returned from https://pep8ci.herokuapp.com/
-
 
 # Deployment
 

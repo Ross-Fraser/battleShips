@@ -95,9 +95,9 @@ def exit_game():
 
 
 def fire_ammo(board, ammo_count):
-    for _ in range(ammo_count):
+    for shot in range(ammo_count, 0, -1):
         try:
-            target = input(Fore.CYAN + "Enter the row and column to fire:").upper()
+            target = input(Fore.CYAN + "Enter the row and column to fire. (Ammo remaining: {shot}): ").upper()
             
             if target.lower() == 'exit':
                 exit_game()
@@ -127,6 +127,8 @@ def fire_ammo(board, ammo_count):
             if board.are_all_ships_sunk():
                 print(Fore.BLUE + "Congratulations! You have sunk all the enemy ships. Game Over!")
                 return
+            
+            shot -= 1  # Decrement the shot count
 
         except ValueError as e:
             print(Fore.YELLOW + f"Invalid input: {e}")
