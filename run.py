@@ -1,4 +1,3 @@
-import random
 import colorama
 from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
@@ -33,7 +32,7 @@ instructions = """
  3. Let the battle begin!
     i.      Enter the row and column of the position you want to bomb.
     ii.     If you hit a ship, you will see an "x" on the board, otherwise you will see a "-".
- 5. The game ends when all of the ships are sunk or you type "exit" at any input prompt.
+ 5. The game ends when all of the ships are sunk, you run out of ammo or you type "exit" at any input prompt.
     """
 
 welcome_screen()
@@ -95,9 +94,9 @@ def exit_game():
 
 
 def fire_ammo(board, ammo_count):
-    for shot in range(ammo_count, 0, -1):
+    for _ in range(ammo_count):
         try:
-            target = input(Fore.CYAN + f"Enter the row and column to fire. (Ammo remaining: {shot}): ").upper()
+            target = input(Fore.CYAN + "Enter the row and column to fire:").upper()
             
             if target.lower() == 'exit':
                 exit_game()
@@ -127,8 +126,6 @@ def fire_ammo(board, ammo_count):
             if board.are_all_ships_sunk():
                 print(Fore.BLUE + "Congratulations! You have sunk all the enemy ships. Game Over!")
                 return
-            
-            shot -= 1  # Decrement the shot count
 
         except ValueError as e:
             print(Fore.YELLOW + f"Invalid input: {e}")
