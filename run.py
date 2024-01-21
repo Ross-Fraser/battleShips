@@ -24,15 +24,21 @@ def welcome_screen():
 instructions = """ 
  1. Select a board size either:
     i.      5 (5x5). which has 3 ships, the sizes are 2, 3 and 3.
-    ii.     The original 8 (8x8). which has 5 ships, the sizes are 2, 3, 3, 4 and 5.
+    ii.     The original 8 (8x8). which has 5 ships, the sizes are
+            2, 3, 3, 4 and 5.
  2. Position your ships on the board.
-    i.      Depending on the board you choose, you will have to position 3 or 5 ships (the ships cannot overlap)
-    ii.     You can choose to position your ships (displayed as "s") either horizontal or vertical, but not diagonal.
-    iii.    You then select the row and column where you want your ship to start from.  
+    i.      Depending on the board you choose, you will have to
+            position 3 or 5 ships (the ships cannot overlap)
+    ii.     You can choose to position your ships (displayed as "s")
+            either horizontal or vertical, but not diagonal.
+    iii.    You then select the row and column where you want your ship
+            to start from.
  3. Let the battle begin!
     i.      Enter the row and column of the position you want to bomb.
-    ii.     If you hit a ship, you will see an "x" on the board, otherwise you will see a "-".
- 5. The game ends when all of the ships are sunk, you run out of ammo or you type "exit" at any input prompt.
+    ii.     If you hit a ship, you will see an "x" on the board, otherwise
+            you will see a "-".
+ 4. The game ends when all of the ships are sunk, you run out of ammo or you
+            type "exit" at any input prompt.
     """
 
 welcome_screen()
