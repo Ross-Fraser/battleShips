@@ -21,7 +21,7 @@ Welcome to the Battleship Game! In this version of the Battleship game, you'll b
 
 My design process consisted of thinking of each logic step in the game then creating a flowchart detailing the steps as seen below. 
 
-![flowchart](assets/images/screenshots/flowcharts.png)
+![flowchart](assets/images/flowchart.png)
 
 ### Playing the game
 
