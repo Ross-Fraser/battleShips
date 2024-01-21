@@ -1,5 +1,5 @@
 
-![battleship](assets/images/screenshots/battleship.png)
+![battleship](assets/images/screenshots/battleships.png)
 
 # Battleship Game - Solo-Play
 
@@ -21,7 +21,7 @@ Welcome to the Battleship Game! In this version of the Battleship game, you'll b
 
 My design process consisted of thinking of each logic step in the game then creating a flowchart detailing the steps as seen below. 
 
-![flowchart](flowcharts.png)
+![flowchart](assets/images/screenshots/flowcharts.png)
 
 ### Playing the game
 
@@ -41,7 +41,7 @@ I have manually tested this project by:
 ### Validator Testing
 
 - PEP8
-    - No errors were returned from https://pep8ci.herokuapp.com/
+    - There were some errors, but when fixed and pasted back into my editor the program didn't work.
 
 ## Deployment
 
@@ -54,8 +54,6 @@ The site was deployed to Heroku.
 
 
 ### Screenshots
-
-
 
 ![battleships](assets/images/screenshots/battleships.png)
 The opening screen.
