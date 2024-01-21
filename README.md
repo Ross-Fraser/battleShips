@@ -56,8 +56,12 @@ The site was deployed to Heroku.
 ### Screenshots
 
 
-![pep8 validator](assets/images/screenshots/pep8_validator.png)
 
+![battleships](assets/images/screenshots/battleships.png)
+The opening screen.
+
+![errorHandling](assets/images/screenshots/errorHandling.png)
+Error Handling.
 
 ## Requirments
 
