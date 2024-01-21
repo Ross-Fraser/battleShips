@@ -9,11 +9,13 @@ Welcome to the Battleship Game! In this version of the Battleship game, you'll b
 ## Contents
 
 * [Design](#design)
-* [Usage](#usage)
-* [Contributing](#contributing)
-* [License](#licence)
+* [Playing the game](#playing_the_game)
+* [Testing](#testing)
+* [Validator testing](#valivador_testing)
+* [Deployment](#deployment)
+* [Requirements](#requirments)
+* [Credits](#credits)
 
-# Features
 
 ## Design
 
@@ -21,14 +23,14 @@ My design process consisted of thinking of each logic step in the game then crea
 
 ![flowchart](flowcharts.png)
 
-### Playing the Game
+### Playing the game
 
 1. Open the game in your web browser.
 2. Select the board size
 3. Position your ships
 4. Attack the ships
 
-# Testing
+## Testing
 
 I have manually tested this project by:
 
@@ -36,12 +38,12 @@ I have manually tested this project by:
 - Passed the code through the pep8 validator.
 - Gave invalid inputs: where numbers were expected I gave text and symbols and vis versa.
 
-## Validator Testing
+### Validator Testing
 
 - PEP8
     - No errors were returned from https://pep8ci.herokuapp.com/
 
-# Deployment
+## Deployment
 
 The site was deployed to Heroku.
 - Create a new Heroku app.
@@ -51,9 +53,8 @@ The site was deployed to Heroku.
 - Click on Deploy
 
 
-## Screenshots
+### Screenshots
 
-The pep8 validator results
 
 ![pep8 validator](assets/images/screenshots/pep8_validator.png)
 
@@ -62,6 +63,6 @@ The pep8 validator results
 
 The only requirments are that you are running python 3.11 and have colorama.
 
-# Credits
+## Credits
 
 - Code Institute for the deployment terminal.
