@@ -56,8 +56,9 @@ class BattleShipBoard:
         try:
             boards = int(boards)
             if boards not in [5, 8]:
-                raise ValueError
-                (Fore.YELLOW + "The board must be 5 or 8, Please try again.")
+                raise ValueError(Fore.YELLOW
+                                 + "The board must be 5 or 8,"
+                                   "Please try again")
         except ValueError as e:
             raise ValueError(f"{e}")
 
@@ -106,8 +107,8 @@ def exit_game():
 def fire_ammo(board, ammo_count):
     for _ in range(ammo_count):
         try:
-            target = input
-            (Fore.CYAN + "Enter the row and column to fire:").upper()
+            target = input(Fore.CYAN + "Enter the row and "
+                           "column to fire:").upper()
 
             if target.lower() == 'exit':
                 exit_game()
@@ -141,7 +142,7 @@ def fire_ammo(board, ammo_count):
             # Check if all ships are sunk after each shot
             if board.are_all_ships_sunk():
                 print(Fore.BLUE
-                      + "Congratulations! You have sunk all the"
+                      + "Congratulations! You have sunk all the "
                         "enemy ships. Game Over!")
                 return
 
@@ -184,14 +185,14 @@ def get_user_ship_coordinates(board_size, ship_size, row_range, col_range):
     """
 
     print(Fore.CYAN
-          + f"\nEnter the details for the ship"
+          + f"\nEnter the details for the ship "
             "location of size - {ship_size}\n")
 
     while True:
         try:
             orientation = input(Fore.CYAN
-                                + "Enter orientation [H]orizontal"
-                                  "or [V]ertical): ").upper()
+                                + "Enter orientation [H]orizontal "
+                                "or [V]ertical): ").upper()
 
             if orientation.lower() == 'exit':
                 exit_game()
@@ -201,22 +202,20 @@ def get_user_ship_coordinates(board_size, ship_size, row_range, col_range):
 
             # Input format: "row, column"
             input_coordinates = input(Fore.CYAN
-                                      + f"Enter starting row and"
-                                        " column: ").upper()
+                                      + f"Enter starting row and "
+                                        "column: ").upper()
 
             if input_coordinates.lower() == 'exit':
                 exit_game()
 
-            if len(input_coordinates) != 2 or not input_coordinates.isalnum():
-                raise ValueError(Fore.YELLOW
-                                 + "Please enter a valid 2-character"
-                                   " alphanumeric coordinate without symbols.")
+            if len(input_coordinates) != 2 or not input_coordinates[0].isalnum() or not input_coordinates[1].isalnum():
+                raise ValueError(Fore.YELLOW + "Please enter a valid 2-character alphanumeric coordinate without symbols.")
+
 
             start_row, start_col = input_coordinates[0], input_coordinates[1]
 
             """
-            Handle both cases where the first character
-            is a letter or a number
+            Handle both cases where the first character is a letter or a number
             """
 
             if start_row.isalpha():
@@ -274,14 +273,14 @@ def create_ships(board_size):
     board = [[' '] * board_size for _ in range(board_size)]
 
     for size in ship_sizes:
-        ship = get_user_ship_coordinates
-        (board_size, size, row_range, col_range)
-        while any(cell in ships for cell in ship):
-            print(Fore.YELLOW
-                  + "Ships cannot overlap. Please re-enter the row"
-                    " and column for the ship.\n")
+        while True:
             ship = get_user_ship_coordinates
             (board_size, size, row_range, col_range)
+            if not any(cell in ships for cell in ship):
+                break
+            print(Fore.YELLOW
+                  + "Ships cannot overlap. Please re-enter the row "
+                    "and column for the ship.\n")
         ships.extend(ship)
 
         # Update the board with 's' at ship positions
