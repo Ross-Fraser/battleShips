@@ -274,22 +274,21 @@ def create_ships(board_size):
 
     for size in ship_sizes:
         while True:
-            ship = get_user_ship_coordinates
-            (board_size, size, row_range, col_range)
+            ship = get_user_ship_coordinates(board_size, size, row_range, col_range)
             if not any(cell in ships for cell in ship):
                 break
             print(Fore.YELLOW
-                  + "Ships cannot overlap. Please re-enter the row "
-                    "and column for the ship.\n")
+              + "Ships cannot overlap. Please re-enter the row "
+                "and column for the ship.\n")
         ships.extend(ship)
 
         # Update the board with 's' at ship positions
         x.ships = ships
-        for ship in ships:
-            row, col = ship
+        for ship_cell in ship:
+            row, col = ship_cell
             x.board[row - 1][col] = Fore.GREEN + 's'
 
-        x.print_board()  # Update the board after placing each ship
+    x.print_board()  # Update the board after placing each ship
 
     print(Fore.BLUE + "Ships positioned on the board:\n")
     x.print_board()
