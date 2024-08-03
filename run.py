@@ -117,14 +117,11 @@ def fire_ammo(board, ammo_count):
 
             col_range = [chr(ord('A') + i) for i in range(board.boards)]
 
-            if (row not in range(1, board.boards + 1) or
-                    col_text not in col_range):
+            if (row not in range(1, board.boards + 1) or col_text not in col_range):
                 raise ValueError(
                     Fore.YELLOW +
-                    f"Invalid row and or column. "
-                    f"Please try again. Row should be between 1 "
-                    f"and {board.boards}, "
-                    f"Column should be one of {col_range}."
+                    f"Invalid row: {row}. Row should be between 1 and {board.boards}."
+                    f"Invalid column: {col_text}. Column should be one of {col_range}."
                 )
 
             print(f"Firing at {target}...")
@@ -154,7 +151,7 @@ def fire_ammo(board, ammo_count):
     ran out of ammo
     """
 
-    print(Fore.BLUE + "Out of ammo! Game Over.")
+    print(Fore.BLUE + "You are out of ammo! Game Over.")
 
 
 """
@@ -169,7 +166,7 @@ while True:
 
         if not boards.isdigit():
             raise ValueError(Fore.YELLOW
-                             + "no text or symbols allowed,"
+                             + "No text or symbols allowed,"
                                "please try again.")
         x = BattleShipBoard(boards)
         break
@@ -184,38 +181,35 @@ def get_user_ship_coordinates(board_size, ship_size, row_range, col_range):
     This function prompts the user to input the row and column of a ship.
     """
 
-    print(Fore.CYAN
-          + f"\nEnter the details for the ship "
-            "location of size - {ship_size}\n")
+    print(Fore.CYAN + f"\nEnter the location coordinates for the ship size - {ship_size}\n")
 
     while True:
         try:
             orientation = input(Fore.CYAN
-                                + "Enter orientation [H]orizontal "
+                                + "Enter the orientation of the ship [H]orizontal "
                                 "or [V]ertical): ").upper()
 
             if orientation.lower() == 'exit':
                 exit_game()
 
             if orientation not in ['H', 'V']:
-                raise ValueError(Fore.YELLOW + "Please enter 'H' or 'V'.")
+                raise ValueError(Fore.YELLOW + "Please enter H for Horizontal or V for Vertical.")
 
             # Input format: "row, column"
-            input_coordinates = input(Fore.CYAN
-                                      + f"Enter starting row and "
-                                        "column: ").upper()
+            input_coordinates = input(Fore.CYAN + "Enter starting row and column for the ship you want to position: ").upper()
 
             if input_coordinates.lower() == 'exit':
                 exit_game()
 
+            # Validate coordinates
             if len(input_coordinates) != 2 or not input_coordinates[0].isalnum() or not input_coordinates[1].isalnum():
-                raise ValueError(Fore.YELLOW + "Please enter a valid 2-character alphanumeric coordinate without symbols.")
-
+                raise ValueError(Fore.YELLOW + "Please enter a row and column, no symbols allowed." + Style.RESET_ALL)
 
             start_row, start_col = input_coordinates[0], input_coordinates[1]
 
             """
-            Handle both cases where the first character is a letter or a number
+            Handle both cases where the first character
+            is a letter or a number
             """
 
             if start_row.isalpha():
@@ -278,7 +272,7 @@ def create_ships(board_size):
             if not any(cell in ships for cell in ship):
                 break
             print(Fore.YELLOW
-              + "Ships cannot overlap. Please re-enter the row "
+              + "Ships cannot overlap. Please enter a new row "
                 "and column for the ship.\n")
         ships.extend(ship)
 
@@ -290,7 +284,7 @@ def create_ships(board_size):
 
     x.print_board()  # Update the board after placing each ship
 
-    print(Fore.BLUE + "Ships positioned on the board:\n")
+    print(Fore.BLUE + "Ships are now positioned on the board:\n")
     x.print_board()
 
     return ships
@@ -299,4 +293,4 @@ def create_ships(board_size):
 ships = create_ships(x.boards)
 x.ships = ships
 x.place_ships_on_board(ships)
-fire_ammo(x, AMMO_5)
+fire_ammo(x, AMMO_5 if x.boards == 5 else AMMO_8)
