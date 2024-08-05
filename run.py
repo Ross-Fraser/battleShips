@@ -3,15 +3,22 @@ from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
 
 BOARD_SIZES = [5, 8]
-SHIP_SIZES_5 = [2, 3, 3]
-ROW_RANGE_5 = range(1, 6)
-COL_RANGE_5 = ['A', 'B', 'C', 'D', 'E']
-AMMO_5 = 10
-SHIP_SIZES_8 = [2, 3, 3, 4, 5]
-ROW_RANGE_8 = range(1, 9)
-COL_RANGE_8 = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
-AMMO_8 = 20
-
+SHIP_SIZES = {
+    5: [2, 3, 3],
+    8: [2, 3, 3, 4, 5]
+}
+ROW_RANGES = {
+    5: range(1, 6),
+    8: range(1, 9)
+}
+COL_RANGES = {
+    5: ['A', 'B', 'C', 'D', 'E'],
+    8: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+}
+AMMO = {
+    5: 10,
+    8: 20
+}
 
 def welcome_screen():
     """
@@ -22,24 +29,18 @@ def welcome_screen():
 
 
 instructions = """
- 1. Select a board size either:
-    i.      5 (5x5). which has 3 ships, the sizes are 2, 3 and 3.
-    ii.     The original 8 (8x8). which has 5 ships, the sizes are
-            2, 3, 3, 4 and 5.
- 2. Position your ships on the board.
-    i.      Depending on the board you choose, you will have to
-            position 3 or 5 ships (the ships cannot overlap)
-    ii.     You can choose to position your ships (displayed as "s")
-            either horizontal or vertical, but not diagonal.
-    iii.    You then select the row and column where you want your ship
-            to start from.
- 3. Let the battle begin!
-    i.      Enter the row and column of the position you want to bomb.
-    ii.     If you hit a ship, you will see an "x" on the board, otherwise
-            you will see a "-".
- 4. The game ends when all of the ships are sunk, you run out of ammo or you
-            type "exit" at any input prompt.
-    """
+1. Select a board size either:
+   i. 5 (5x5) - 3 ships (sizes 2, 3, 3).
+   ii. 8 (8x8) - 5 ships (sizes 2, 3, 3, 4, 5).
+2. Position your ships on the board:
+   i. Ships cannot overlap.
+   ii. Ships can be horizontal or vertical, not diagonal.
+   iii. Enter the starting row and column for each ship.
+3. Let the battle begin:
+   i. Enter the row and column to fire at.
+   ii. Hit - "x", Miss - "-".
+4. The game ends when all ships are sunk, ammo runs out, or you type "exit".
+"""
 
 welcome_screen()
 print(instructions)
@@ -57,8 +58,8 @@ class BattleShipBoard:
             boards = int(boards)
             if boards not in [5, 8]:
                 raise ValueError(Fore.YELLOW
-                                 + "The board must be 5 or 8,"
-                                   "Please try again")
+                                 + "The board must be 5 or 8. "
+                                   "Please try again.")
         except ValueError as e:
             raise ValueError(f"{e}")
 
@@ -108,7 +109,7 @@ def fire_ammo(board, ammo_count):
     for _ in range(ammo_count):
         try:
             target = input(Fore.CYAN + "Enter the row and "
-                           "column to fire:").upper()
+                           "column to fire at:").upper()
 
             if target.lower() == 'exit':
                 exit_game()
@@ -159,15 +160,15 @@ Get the board size from the user input.
 """
 while True:
     try:
-        boards = input(Fore.CYAN + "Enter board size 5 or 8: \n")
+        boards = input(Fore.CYAN + "Enter the board size 5 or 8: \n")
 
         if boards.lower() == 'exit':
             exit_game()
 
         if not boards.isdigit():
             raise ValueError(Fore.YELLOW
-                             + "No text or symbols allowed,"
-                               "please try again.")
+                             + "No text or symbols allowed. "
+                               "Please try again.")
         x = BattleShipBoard(boards)
         break
     except ValueError as e:
@@ -186,8 +187,8 @@ def get_user_ship_coordinates(board_size, ship_size, row_range, col_range):
     while True:
         try:
             orientation = input(Fore.CYAN
-                                + "Enter the orientation of the ship [H]orizontal "
-                                "or [V]ertical): ").upper()
+                                + "Enter the orientation of the ship H for horizontal "
+                                "or V for vertical: ").upper()
 
             if orientation.lower() == 'exit':
                 exit_game()
@@ -203,7 +204,7 @@ def get_user_ship_coordinates(board_size, ship_size, row_range, col_range):
 
             # Validate coordinates
             if len(input_coordinates) != 2 or not input_coordinates[0].isalnum() or not input_coordinates[1].isalnum():
-                raise ValueError(Fore.YELLOW + "Please enter a row and column, no symbols allowed." + Style.RESET_ALL)
+                raise ValueError(Fore.YELLOW + "Please enter a row and column. No symbols allowed." + Style.RESET_ALL)
 
             start_row, start_col = input_coordinates[0], input_coordinates[1]
 
@@ -253,14 +254,15 @@ def create_ships(board_size):
     This function generates ships based on the board size.
     """
     if board_size == 5:
-        ship_sizes = SHIP_SIZES_5
-        row_range = ROW_RANGE_5
-        col_range = COL_RANGE_5
+        ship_sizes = [2, 3, 3],
+        row_range = range(1, 6)
+        col_range = ['A', 'B', 'C', 'D', 'E']
     elif board_size == 8:
-        ship_sizes = SHIP_SIZES_8
-        row_range = ROW_RANGE_8
-        col_range = COL_RANGE_8
+        ship_sizes = [2, 3, 3, 4, 5]
+        row_range = range(1, 9)
+        col_range = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
     else:
+        
         raise ValueError(Fore.YELLOW + "Invalid board size.")
 
     ships = []
@@ -293,4 +295,4 @@ def create_ships(board_size):
 ships = create_ships(x.boards)
 x.ships = ships
 x.place_ships_on_board(ships)
-fire_ammo(x, AMMO_5 if x.boards == 5 else AMMO_8)
+fire_ammo(x, 5 if x.boards == 5 else 8, 10 if x.boards == 5 else 20)
