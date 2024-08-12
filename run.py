@@ -1,3 +1,4 @@
+import random
 import colorama
 from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
@@ -66,8 +67,13 @@ class BattleShipBoard:
         print(Fore.WHITE + "   " + " ".join
               (chr(ord('A') + i) for i in range(self.boards)))
 
+        reveal_ships = True
+
         for i, row in enumerate(self.board):
-            print(f"{i + 1:2d} {' '.join(str(cell) for cell in row)}")
+            if reveal_ships:
+                print(f"{i + 1:2d} {' '.join(str(cell) for cell in row)}")
+            else:
+                print(f"{i + 1:2d} {' '.join(str(cell) if cell not in [Fore.GREEN + 'S', Fore.GREEN + 'F', Fore.GREEN + 'C', Fore.GREEN + 'D', Fore.GREEN + 'B'] else ' ' for cell in row)}")
 
     def place_ships_on_board(self, ships):
         for ship_name, ship_coords in ships.items():
@@ -93,21 +99,23 @@ def exit_game():
     exit()
 
 
-def fire_ammo(board, ammo_count):
-    for _ in range(ammo_count):
+def fire_ammo(board, target_board, player_name):
+    while True:
         try:
-            target = input(Fore.CYAN + "Enter the row and "
-                           "column to fire at:").upper()
+            if player_name == "Computer":
+                row = random.randint(1, board.boards)
+                col_text = random.choice(COL_RANGES[board.boards])
+            else:
+                target = input(Fore.CYAN + f"{player_name}, enter the row and column to fire at: ").upper()
 
-            if target.lower() == 'exit':
-                exit_game()
+                if target.lower() == 'exit':
+                    exit_game()
 
-            row, col_text = int(target[:-1]), target[-1]
+                row, col_text = int(target[:-1]), target[-1]
 
             col_range = [chr(ord('A') + i) for i in range(board.boards)]
 
-            if (row not in range(1, board.boards + 1)
-                    or col_text not in col_range):
+            if row not in range(1, board.boards + 1) or col_text not in col_range:
                 raise ValueError(
                     Fore.YELLOW +
                     f"Invalid row: {row}."
@@ -116,42 +124,34 @@ def fire_ammo(board, ammo_count):
                     "Column should be one of {col_range}."
                 )
 
-            print(f"Firing at {target}...")
+            print(f"{player_name} firing at {row}{col_text}...")
 
             col_index = col_range.index(col_text)
-            if any((row, col_index) in coords for coords in board.ships.values()):
-                print("Direct Hit!")
-                board.board[row - 1][col_index] = Fore.RED + "x"
+            if any((row, col_index) in coords for coords in target_board.ships.values()):
+                print(Fore.RED + f"{player_name}, Direct Hit!")
+                target_board.board[row - 1][col_index] = Fore.RED + "x"
             else:
-                print("You Missed!")
-                board.board[row - 1][col_index] = Fore.BLUE + "-"
+                print(Fore.BLUE + f"{player_name}, Missed!")
+                target_board.board[row - 1][col_index] = Fore.BLUE + "-"
 
-            board.print_board()
+            target_board.print_board()
+            # Check if all ships are sunk
+            if target_board.are_all_ships_sunk():
+                print(Fore.BLUE + f"Congratulations! {player_name} has sunk all the enemy ships. Game Over!")
+                return True
 
-            # Check if all ships are sunk after each shot
-            if board.are_all_ships_sunk():
-                print(Fore.BLUE
-                      + "Congratulations! You have sunk all the "
-                        "enemy ships. Game Over!")
-                return
+            break
 
         except ValueError as e:
-            print(Fore.YELLOW + f"Invalid input: {e}")
+            if player_name != "Computer":
+                print(Fore.YELLOW + f"Invalid input: {e}")
 
-    """
-    if the loop completes without returning, it means the player
-    ran out of ammo
-    """
-
-    print(Fore.BLUE + "You are out of ammo! Game Over.")
+    return False
 
 
-"""
-Get the board size from the user input.
-"""
 while True:
     try:
-        boards = input(Fore.CYAN + "Enter the board size you wish to use,"
+        boards = input(Fore.CYAN + "Enter the board size you wish to use, "
                        f"5 or 8: \n")
 
         if boards.lower() == 'exit':
@@ -166,8 +166,6 @@ while True:
     except ValueError as e:
         print(Fore.YELLOW + f"Invalid input: {e}\n")
 
-x.print_board()
-
 
 def get_user_ship_coordinates(ship_name, ship_size, board_size, row_range, col_range):
     print(Fore.CYAN + f"\nEnter the location coordinates for the {ship_name} (size {ship_size})\n")
@@ -176,7 +174,7 @@ def get_user_ship_coordinates(ship_name, ship_size, board_size, row_range, col_r
         try:
             orientation = input(Fore.CYAN
                                 + "Enter the orientation of the ship."
-                                f" H for horizontal or V for
+                                f" H for horizontal or V for"
                                 f" vertical: ").upper()
 
             if orientation.lower() == 'exit':
@@ -215,7 +213,7 @@ def get_user_ship_coordinates(ship_name, ship_size, board_size, row_range, col_r
             print(Fore.YELLOW + f"Invalid input: {e}")
 
 
-def create_ships(board_size):
+def create_ships(board_size, is_computer=False):
     if board_size not in SHIP_NAMES_AND_SIZES:
         raise ValueError(Fore.YELLOW + "Invalid board size.")
 
@@ -233,25 +231,63 @@ def create_ships(board_size):
 
     for ship_name, ship_size in ship_dict.items():
         while True:
-            ship_coords = get_user_ship_coordinates(ship_name, ship_size, board_size, row_range, col_range)
-            if not any(coord in coords for coords in ships.values() for coord in ship_coords):
-                break
-            print(Fore.YELLOW + "Ships cannot overlap. Please enter a new row and column for the ship.\n")
-        ships[ship_name] = ship_coords
+            if is_computer:
+                orientation = random.choice(['H', 'V'])
+                start_row = random.choice(row_range)
+                start_col = random.choice(col_range)
+                start_col_index = col_range.index(start_col)
+                if orientation == 'H':
+                    if start_col_index + ship_size <= board_size:
+                        ship_coords = [(start_row, start_col_index + i) for i in range(ship_size)]
+                    else:
+                        continue
+                else:
+                    if start_row + ship_size - 1 <= board_size:
+                        ship_coords = [(start_row + i, start_col_index) for i in range(ship_size)]
+                    else:
+                        continue
+            else:
+                ship_coords = get_user_ship_coordinates(ship_name, ship_size, board_size, row_range, col_range)
 
-        for row, col in ship_coords:
+            if not any(cell in ships.values() for ship in ships.values() for cell in ship_coords):
+                ships[ship_name] = ship_coords
+                break
+
+            if not is_computer:
+                print(Fore.YELLOW + "Ships cannot overlap. Please enter a new row and column for the ship.\n")
+
+        for ship_cell in ship_coords:
+            row, col = ship_cell
             board[row - 1][col] = Fore.GREEN + ship_name[0]
 
-        print(Fore.BLUE + "Updated board after placing a ship:\n")
-        print_board_with_headers(board)
+        if not is_computer:
+            print(Fore.BLUE + "Updated board after placing a ship:\n")
+            print_board_with_headers(board)
 
-    print(Fore.BLUE + "All ships are now positioned on the board:\n")
-    print_board_with_headers(board)
+    if not is_computer:
+        print(Fore.BLUE + "All ships are now positioned on the board:\n")
+        print_board_with_headers(board)
 
     return ships
 
 
-ships = create_ships(x.boards)
-x.ships = ships
-x.place_ships_on_board(ships)
-fire_ammo(x, 10 if x.boards == 5 else 20)
+player_board = BattleShipBoard(boards)
+player_ships = create_ships(player_board.boards)
+computer_board = BattleShipBoard(boards)
+computer_ships = create_ships(computer_board.boards, is_computer=True)
+
+player_board.ships = player_ships
+computer_board.ships = computer_ships
+
+player_board.place_ships_on_board(player_ships)
+computer_board.place_ships_on_board(computer_ships)
+
+player_turn = True
+while True:
+    if player_turn:
+        if fire_ammo(player_board, computer_board, "Player"):
+            break
+    else:
+        if fire_ammo(computer_board, player_board, "Computer"):
+            break
+    player_turn = not player_turn
