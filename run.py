@@ -161,6 +161,7 @@ while True:
             raise ValueError(Fore.YELLOW
                              + "No text or symbols allowed. "
                                "Please try again.")
+        boards = int(boards)  # Convert the input to an integer
         x = BattleShipBoard(boards)
         break
     except ValueError as e:
