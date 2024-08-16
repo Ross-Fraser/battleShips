@@ -3,6 +3,7 @@ import colorama
 from colorama import Fore, Back, Style
 colorama.init(autoreset=True)
 
+# Constants and configuration variables
 BOARD_SIZES = [5, 8]
 SHIP_NAMES_AND_SIZES = {
     5: {'Scout': 2, 'Frigate': 3, 'Corvette': 3},
@@ -21,7 +22,12 @@ AMMO = {
     8: 20
 }
 
+# Function to exit the game
+def exit_game():
+    print(Fore.BLUE + "Exiting the game.")
+    exit()
 
+# Function to display the welcome screen
 def welcome_screen():
     """
     This function displays a welcome message to the user.
@@ -29,7 +35,7 @@ def welcome_screen():
     print(Back.BLUE + "\nWelcome to BattleShip!\n")
     print(Back.BLUE + "The goal of the game is to sink all enemy ships.\n")
 
-
+# Game instructions
 instructions = """
 1. Select a board size either:
    i. 5 (5x5) - 3 ships: Scout (2), Frigate (3), Corvette (3).
@@ -47,7 +53,6 @@ instructions = """
 welcome_screen()
 print(instructions)
 
-
 class BattleShipBoard:
     def __init__(self, boards):
         if not isinstance(boards, int):
@@ -58,6 +63,7 @@ class BattleShipBoard:
         self.boards = boards
         self.board = [[' '] * boards for _ in range(boards)]
         self.ships = {}
+        self.fired_coordinates = set()
 
     def print_board(self):
         """
@@ -73,7 +79,7 @@ class BattleShipBoard:
             if reveal_ships:
                 print(f"{i + 1:2d} {' '.join(str(cell) for cell in row)}")
             else:
-                print(f"{i + 1:2d} {' '.join(str(cell) if cell not in [Fore.GREEN + 'S', Fore.GREEN + 'F', Fore.GREEN + 'C', Fore.GREEN + 'D', Fore.GREEN + 'B'] else ' ' for cell in row)}")
+                print(f"{i + 1:2d} {' '.join(str(cell) if not cell.startswith(Fore.GREEN) else ' ' for cell in row)}")
 
     def place_ships_on_board(self, ships):
         for ship_name, ship_coords in ships.items():
@@ -90,30 +96,28 @@ class BattleShipBoard:
                     return False
         return True
 
-
-def exit_game():
-    """
-    This function allows the user to exit the game.
-    """
-    print(Fore.BLUE + "Exiting the game.")
-    exit()
+    def fire_at(self, row, col):
+        if (row, col) in self.fired_coordinates:
+            return Fore.YELLOW + "Already fired at these coordinates."
+        self.fired_coordinates.add((row, col))
+        return "valid"
 
 
 def fire_ammo(board, target_board, player_name):
     while True:
         try:
-            if player_name == "Computer":
-                row = random.randint(1, board.boards)
-                col_text = random.choice(COL_RANGES[board.boards])
-            else:
-                target = input(Fore.CYAN + f"{player_name}, enter the row and column to fire at: ").upper()
+            target = input(Fore.CYAN + f"{player_name}, enter the coordinates to fire at: ").upper()
 
+            if player_name == "Computer":
+                target = f"{random.randint(1, board.boards)}{random.choice(COL_RANGES[board.boards])}"
+            else:
                 if target.lower() == 'exit':
                     exit_game()
 
-                row, col_text = int(target[:-1]), target[-1]
+            row, col_text = int(target[:-1]), target[-1]
 
             col_range = [chr(ord('A') + i) for i in range(board.boards)]
+            col_index = col_range.index(col_text)
 
             if row not in range(1, board.boards + 1) or col_text not in col_range:
                 raise ValueError(
@@ -126,7 +130,15 @@ def fire_ammo(board, target_board, player_name):
 
             print(f"{player_name} firing at {row}{col_text}...")
 
-            col_index = col_range.index(col_text)
+            fire_result = board.fire_at(row, col_index)
+            if fire_result != "valid":
+                if player_name == "Computer":
+                    print(Fore.YELLOW + "Computer has already fired at these coordinates. Choosing new coordinates...")
+                else:
+                    print(Fore.YELLOW + "You have already fired at these coordinates. Please choose new coordinates.")
+
+                continue
+
             if any((row, col_index) in coords for coords in target_board.ships.values()):
                 print(Fore.RED + f"{player_name}, Direct Hit!")
                 target_board.board[row - 1][col_index] = Fore.RED + "x"
@@ -134,8 +146,11 @@ def fire_ammo(board, target_board, player_name):
                 print(Fore.BLUE + f"{player_name}, Missed!")
                 target_board.board[row - 1][col_index] = Fore.BLUE + "-"
 
-            target_board.print_board()
-            # Check if all ships are sunk
+            if player_name == "Computer":
+                target_board.print_board(reveal_ships=True)
+            else:
+                target_board.print_board(reveal_ships=False)
+
             if target_board.are_all_ships_sunk():
                 print(Fore.BLUE + f"Congratulations! {player_name} has sunk all the enemy ships. Game Over!")
                 return True
@@ -148,7 +163,7 @@ def fire_ammo(board, target_board, player_name):
 
     return False
 
-
+# Getting board size from the user
 while True:
     try:
         boards = input(Fore.CYAN + "Enter the board size you wish to use, "
@@ -167,7 +182,7 @@ while True:
     except ValueError as e:
         print(Fore.YELLOW + f"Invalid input: {e}\n")
 
-
+# Ship placement functions
 def get_user_ship_coordinates(ship_name, ship_size, board_size, row_range, col_range):
     print(Fore.CYAN + f"\nEnter the location coordinates for the {ship_name} (size {ship_size})\n")
 
@@ -212,7 +227,6 @@ def get_user_ship_coordinates(ship_name, ship_size, board_size, row_range, col_r
 
         except ValueError as e:
             print(Fore.YELLOW + f"Invalid input: {e}")
-
 
 def create_ships(board_size, is_computer=False):
     if board_size not in SHIP_NAMES_AND_SIZES:
@@ -271,7 +285,7 @@ def create_ships(board_size, is_computer=False):
 
     return ships
 
-
+# Initializing game boards and placing ships
 player_board = BattleShipBoard(boards)
 player_ships = create_ships(player_board.boards)
 computer_board = BattleShipBoard(boards)
@@ -283,6 +297,7 @@ computer_board.ships = computer_ships
 player_board.place_ships_on_board(player_ships)
 computer_board.place_ships_on_board(computer_ships)
 
+# Main game loop
 player_turn = True
 while True:
     if player_turn:
