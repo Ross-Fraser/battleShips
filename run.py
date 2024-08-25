@@ -72,6 +72,7 @@ class BattleShipBoard:
         self.board = [[' '] * boards for _ in range(boards)]
         self.ships = {}
         self.fired_coordinates = set()
+        self.ammo = AMMO[boards]
 
     def print_board(self, reveal_ships=True):
         """
@@ -152,6 +153,10 @@ def fire_ammo(board, target_board, player_name):
             if row not in range(1, board.boards + 1):
                 raise ValueError(Fore.YELLOW + f"Invalid row: {row}. Row should be between 1 and {board.boards}.")
 
+            if board.ammo <= 0:
+                print(Fore.YELLOW + "Out of ammo! Game over.")
+                return True
+
             print(f"{player_name} firing at {row}{col_text}...")
 
             fire_result = board.fire_at(row, col_index)
@@ -175,6 +180,9 @@ def fire_ammo(board, target_board, player_name):
 
             target_board.print_board(reveal_ships=(player_name == "Computer"))
 
+            board.ammo -= 1
+            print(Fore.CYAN + f"{player_name}, remaining ammo: {board.ammo}")
+
             if target_board.are_all_ships_sunk():
                 print(Fore.BLUE + f"Congratulations! {player_name} has sunk"
                       " all the enemy ships. Game Over!")
@@ -185,8 +193,6 @@ def fire_ammo(board, target_board, player_name):
         except ValueError as e:
             if player_name != "Computer":
                 print(Fore.YELLOW + f"Invalid input: {e}")
-
-
 
     return False
 
@@ -215,8 +221,7 @@ while True:
 def get_user_ship_coordinates(ship_name, ship_size, board_size):
     row_range = ROW_RANGES[board_size]
     col_range = COL_RANGES[board_size]
-    print(Fore.CYAN + f"\nEnter the location coordinates for the {ship_name}"
-          f"(size {ship_size})\n")
+    print(Fore.CYAN + f"\nEnter the location coordinates for the {ship_name} (size {ship_size})\n")
 
     while True:
         try:
