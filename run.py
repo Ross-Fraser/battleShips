@@ -123,35 +123,40 @@ def fire_ammo(board, target_board, player_name):
                     f"{random.choice(COL_RANGES[board.boards])}"
                 )
             else:
-                target = input(Fore.CYAN + f"{player_name}, enter the coordinates"
-                               " to fire at (e.g., 3C): ").upper()
+                target = input(Fore.CYAN + f"{player_name}, enter the "
+                               "coordinates to fire at (e.g., 3C): ").upper()
 
                 if target.lower() == 'exit':
                     exit_game()
 
             # Ensure the input is at least 2 characters long
             if len(target) < 2:
-                raise ValueError(Fore.YELLOW + "Input too short. Please enter coordinates in the format: row followed by column (e.g., 3C).")
+                raise ValueError(Fore.YELLOW + "Input too short. Please enter"
+                                 " coordinates in the format: row followed by"
+                                 " column (e.g., 3C).")
 
             # Separate the row and column part of the input
             row_str, col_text = target[:-1], target[-1]
 
             # Check if the row part is numeric
             if not row_str.isdigit():
-                raise ValueError(Fore.YELLOW + f"Invalid row: {row_str}. Row should be a number.")
+                raise ValueError(Fore.YELLOW + f"Invalid row: {row_str}. Row"
+                                 " should be a number.")
 
             row = int(row_str)
             col_range = COL_RANGES[board.boards]
 
             # Check if the column part is valid
             if col_text not in col_range:
-                raise ValueError(Fore.YELLOW + f"Invalid column: {col_text}. Column should be one of {col_range}.")
+                raise ValueError(Fore.YELLOW + f"Invalid column: {col_text}."
+                                 " Column should be one of {col_range}.")
 
             col_index = col_range.index(col_text)
 
             # Check if the row is within the valid range
             if row not in range(1, board.boards + 1):
-                raise ValueError(Fore.YELLOW + f"Invalid row: {row}. Row should be between 1 and {board.boards}.")
+                raise ValueError(Fore.YELLOW + f"Invalid row: {row}. Row"
+                                 " should be between 1 and {board.boards}.")
 
             if board.ammo <= 0:
                 print(Fore.YELLOW + "Out of ammo! Game over.")
@@ -221,9 +226,11 @@ while True:
 def get_user_ship_coordinates(ship_name, ship_size, board_size):
     row_range = ROW_RANGES[board_size]
     col_range = COL_RANGES[board_size]
-    print(Fore.CYAN + f"\nEnter the location coordinates for the {ship_name} (size {ship_size})\n")
+    print(Fore.CYAN + f"\nEnter the location coordinates for the {ship_name}"
+          " (size {ship_size})\n")
 
-    while True:
+    orientation = None
+    while orientation not in ['H', 'V']:
         try:
             orientation = input(Fore.CYAN
                                 + "Enter the orientation of the ship."
@@ -237,6 +244,11 @@ def get_user_ship_coordinates(ship_name, ship_size, board_size):
                 raise ValueError(Fore.YELLOW + "Please enter H for Horizontal"
                                  f" or V for Vertical.")
 
+        except ValueError as e:
+            print(Fore.YELLOW + f"Invalid input: {e}")
+
+    while True:
+        try:
             input_coordinates = input(Fore.CYAN + "Enter starting row and"
                                       " column for the ship: ").upper()
 
