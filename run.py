@@ -208,10 +208,10 @@ while True:
 
 
 # Ship placement functions
-def get_user_ship_coordinates(ship_name, ship_size, board_size,
-                              row_range, col_range):
-    print(Fore.CYAN + f"\nEnter the location coordinates for the {ship_name}"
-          f" (size {ship_size})\n")
+def get_user_ship_coordinates(ship_name, ship_size, board_size):
+    row_range = ROW_RANGES[board_size]
+    col_range = COL_RANGES[board_size]
+    print(Fore.CYAN + f"\nEnter the location coordinates for the {ship_name} (size {ship_size})\n")
 
     while True:
         try:
@@ -245,6 +245,7 @@ def get_user_ship_coordinates(ship_name, ship_size, board_size,
 
             start_row = int(input_coordinates[:-1])
             start_col = input_coordinates[-1]
+            start_col_index = col_range.index(start_col)
 
             if start_row not in row_range or start_col not in col_range:
                 raise ValueError(Fore.YELLOW + "Starting coordinates are out"
@@ -315,16 +316,9 @@ def create_ships(board_size, is_computer=False):
                     else:
                         continue
             else:
-                ship_coords = get_user_ship_coordinates(
-                    ship_name, ship_size, board_size, row_range, col_range
-                )
+                ship_coords = get_user_ship_coordinates(ship_name, ship_size, board_size)
 
-            if not any(
-                cell in ships.values()
-                    for ship in ships.values()
-                    for cell in ship_coords
-            ):
-
+            if not any(cell in coords for cell in ship_coords for coords in ships.values()):
                 ships[ship_name] = ship_coords
                 break
 
