@@ -26,7 +26,7 @@ AMMO = {
 
 # Function to exit the game
 def exit_game():
-    print(Fore.BLUE + "Exiting the game.")
+    print(Fore.CYAN + "Exiting the game.")
     exit()
 
 
@@ -35,8 +35,8 @@ def welcome_screen():
     """
     This function displays a welcome message to the user.
     """
-    print(Back.BLUE + "\nWelcome to BattleShip!\n")
-    print(Back.BLUE + "The goal of the game is to sink all enemy ships.\n")
+    print(Back.CYAN + "\nWelcome to BattleShip!\n")
+    print(Back.CYAN + "The goal of the game is to sink all enemy ships.\n")
 
 
 # Game instructions
@@ -53,10 +53,16 @@ instructions = """
    i. Enter the row and column to fire at.
    ii. Hit - "x", Miss - "-".
 4. The game ends when all ships are sunk, ammo runs out, or you type "exit".
+colour codes:
+    i. Green - Your ships.
+    ii. Red - Hit.
+    iii. Blue - Miss.
+    iv. Cyan - Game messages.
+    v. Yellow - Error messages.
 """
 
 welcome_screen()
-print(instructions)
+print(Fore.CYAN + instructions)
 
 
 class BattleShipBoard:
@@ -109,7 +115,7 @@ class BattleShipBoard:
 
     def fire_at(self, row, col):
         if (row, col) in self.fired_coordinates:
-            return Fore.YELLOW + "Already fired at these coordinates."
+            return Fore.CYAN + "Already fired at these coordinates."
         self.fired_coordinates.add((row, col))
         return "valid"
 
@@ -123,7 +129,7 @@ def fire_ammo(board, target_board, player_name):
                     f"{random.choice(COL_RANGES[board.boards])}"
                 )
             else:
-                target = input(Fore.CYAN + f"{player_name}, enter the "
+                target = input(Fore.GREEN + f"{player_name}, enter the "
                                "coordinates to fire at (e.g., 3C): ").upper()
 
                 if target.lower() == 'exit':
@@ -159,18 +165,18 @@ def fire_ammo(board, target_board, player_name):
                                  " should be between 1 and {board.boards}.")
 
             if board.ammo <= 0:
-                print(Fore.YELLOW + "Out of ammo! Game over.")
+                print(Fore.CYAN + "Out of ammo!")
                 return True
 
-            print(f"{player_name} firing at {row}{col_text}...")
+            print(Fore.CYAN + f"{player_name} firing at {row}{col_text}...")
 
             fire_result = board.fire_at(row, col_index)
             if fire_result != "valid":
                 if player_name == "Computer":
-                    print(Fore.YELLOW + "Computer has already fired at these"
+                    print(Fore.CYAN + "Computer has already fired at these"
                           " coordinates. Choosing new coordinates...")
                 else:
-                    print(Fore.YELLOW + "You have already fired at these"
+                    print(Fore.CYAN + "You have already fired at these"
                           " coordinates. Please choose new coordinates.")
 
                 continue
@@ -180,7 +186,7 @@ def fire_ammo(board, target_board, player_name):
                 print(Fore.RED + f"{player_name}, Direct Hit!")
                 target_board.board[row - 1][col_index] = Fore.RED + "x"
             else:
-                print(Fore.BLUE + f"{player_name}, Missed!")
+                print(Fore.CYAN + f"{player_name}, Missed!")
                 target_board.board[row - 1][col_index] = Fore.BLUE + "-"
 
             target_board.print_board(reveal_ships=(player_name == "Computer"))
@@ -189,7 +195,7 @@ def fire_ammo(board, target_board, player_name):
             print(Fore.CYAN + f"{player_name}, remaining ammo: {board.ammo}")
 
             if target_board.are_all_ships_sunk():
-                print(Fore.BLUE + f"Congratulations! {player_name} has sunk"
+                print(Fore.CYAN + f"Congratulations! {player_name} has sunk"
                       " all the enemy ships. Game Over!")
                 return True
 
@@ -205,7 +211,7 @@ def fire_ammo(board, target_board, player_name):
 # Getting board size from the user
 while True:
     try:
-        boards = input(Fore.CYAN + "Enter the board size you wish to use, "
+        boards = input(Fore.GREEN + "Enter the board size you wish to use, "
                        f"5 or 8: \n")
 
         if boards.lower() == 'exit':
@@ -226,13 +232,12 @@ while True:
 def get_user_ship_coordinates(ship_name, ship_size, board_size):
     row_range = ROW_RANGES[board_size]
     col_range = COL_RANGES[board_size]
-    print(Fore.CYAN + f"\nEnter the location coordinates for the {ship_name}"
-          " (size {ship_size})\n")
+    print(Fore.CYAN + f"\nEnter the location coordinates for the {ship_name}" f" (size {ship_size})\n")
 
     orientation = None
     while orientation not in ['H', 'V']:
         try:
-            orientation = input(Fore.CYAN
+            orientation = input(Fore.GREEN
                                 + "Enter the orientation of the ship."
                                 f" H for horizontal or V for"
                                 f" vertical: ").upper()
@@ -243,13 +248,12 @@ def get_user_ship_coordinates(ship_name, ship_size, board_size):
             if orientation not in ['H', 'V']:
                 raise ValueError(Fore.YELLOW + "Please enter H for Horizontal"
                                  f" or V for Vertical.")
-
         except ValueError as e:
             print(Fore.YELLOW + f"Invalid input: {e}")
 
     while True:
         try:
-            input_coordinates = input(Fore.CYAN + "Enter starting row and"
+            input_coordinates = input(Fore.GREEN + "Enter starting row and"
                                       " column for the ship: ").upper()
 
             if input_coordinates.lower() == 'exit':
@@ -347,7 +351,7 @@ def create_ships(board_size, is_computer=False):
                 break
 
             if not is_computer:
-                print(Fore.YELLOW + "Ships cannot overlap. Please enter"
+                print(Fore.CYAN + "Ships cannot overlap. Please enter"
                       " a new row and column for the ship.\n")
 
         for ship_cell in ship_coords:
@@ -355,35 +359,43 @@ def create_ships(board_size, is_computer=False):
             board[row - 1][col] = Fore.GREEN + ship_name[0]
 
         if not is_computer:
-            print(Fore.BLUE + "Updated board after placing a ship:\n")
+            print(Fore.CYAN + "Updated board after placing a ship:\n")
             print_board_with_headers(board)
 
     if not is_computer:
-        print(Fore.BLUE + "All ships are now positioned on the board:\n")
+        print(Fore.CYAN + "All ships are now positioned on the board:\n")
         print_board_with_headers(board)
 
     return ships
 
 
-# Initializing game boards and placing ships
-player_board = BattleShipBoard(boards)
-player_ships = create_ships(player_board.boards)
-computer_board = BattleShipBoard(boards)
-computer_ships = create_ships(computer_board.boards, is_computer=True)
+def play_game(board_size):
+    # Initialize the game boards
+    player_board = BattleShipBoard(board_size)
+    player_ships = create_ships(player_board.boards)
+    computer_board = BattleShipBoard(board_size)
+    computer_ships = create_ships(computer_board.boards, is_computer=True)
 
-player_board.ships = player_ships
-computer_board.ships = computer_ships
+    player_board.ships = player_ships
+    computer_board.ships = computer_ships
 
-player_board.place_ships_on_board(player_ships)
-computer_board.place_ships_on_board(computer_ships)
+    # Place ships on the board
+    player_board.place_ships_on_board(player_ships)
+    computer_board.place_ships_on_board(computer_ships)
 
-# Main game loop
-player_turn = True
-while True:
-    if player_turn:
-        if fire_ammo(player_board, computer_board, "Player"):
-            break
-    else:
-        if fire_ammo(computer_board, player_board, "Computer"):
-            break
-    player_turn = not player_turn
+    # Main game loop
+    player_turn = True
+    while True:
+        if player_turn:
+            if fire_ammo(player_board, computer_board, "Player"):
+                break
+        else:
+            if fire_ammo(computer_board, player_board, "Computer"):
+                break
+        player_turn = not player_turn
+
+    print(Fore.CYAN + "Game Over. Thanks for playing!")
+
+
+# Start the game
+play_game(boards)
