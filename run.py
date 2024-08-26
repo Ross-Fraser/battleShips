@@ -121,6 +121,11 @@ class BattleShipBoard:
 
 
 def fire_ammo(board, target_board, player_name):
+    # Check if the player has run out of ammo at the beginning
+    if board.ammo <= 0:
+        print(Fore.CYAN + f"{player_name} is out of ammo!")
+        return True
+
     while True:
         try:
             if player_name == "Computer":
@@ -164,10 +169,7 @@ def fire_ammo(board, target_board, player_name):
                 raise ValueError(Fore.YELLOW + f"Invalid row: {row}. Row"
                                  " should be between 1 and {board.boards}.")
 
-            if board.ammo <= 0:
-                print(Fore.CYAN + "Out of ammo!")
-                return True
-
+            # Fire ammo and check if the game should end
             print(Fore.CYAN + f"{player_name} firing at {row}{col_text}...")
 
             fire_result = board.fire_at(row, col_index)
@@ -193,6 +195,11 @@ def fire_ammo(board, target_board, player_name):
 
             board.ammo -= 1
             print(Fore.CYAN + f"{player_name}, remaining ammo: {board.ammo}")
+
+            # End the game if ammo reaches 0 after firing
+            if board.ammo <= 0:
+                print(Fore.CYAN + f"{player_name} is out of ammo!")
+                return True
 
             if target_board.are_all_ships_sunk():
                 print(Fore.CYAN + f"Congratulations! {player_name} has sunk"
@@ -232,7 +239,8 @@ while True:
 def get_user_ship_coordinates(ship_name, ship_size, board_size):
     row_range = ROW_RANGES[board_size]
     col_range = COL_RANGES[board_size]
-    print(Fore.CYAN + f"\nEnter the location coordinates for the {ship_name}" f" (size {ship_size})\n")
+    print(Fore.CYAN + f"\nEnter the location coordinates for the {ship_name}"
+                      f" (size {ship_size})\n")
 
     orientation = None
     while orientation not in ['H', 'V']:
