@@ -53,8 +53,9 @@ instructions = """
    i. Enter the row and column to fire at.
    ii. Hit - "x", Miss - "-".
 4. The game ends when all ships are sunk, ammo runs out, or you type "exit".
+
 colour codes:
-    i. Green - Your ships.
+    i. Green - Input requests and your ships.
     ii. Red - Hit.
     iii. Blue - Miss.
     iv. Cyan - Game messages.
@@ -142,9 +143,9 @@ def fire_ammo(board, target_board, player_name):
 
             # Ensure the input is at least 2 characters long
             if len(target) < 2:
-                raise ValueError(Fore.YELLOW + "Input too short. Please enter"
-                                 " coordinates in the format: row followed by"
-                                 " column (e.g., 3C).")
+                raise ValueError(Fore.YELLOW + "No symbols or blank entries"
+                                 " allowed, Please enter a valid row number"
+                                 " and column letter (e.g., 3C).")
 
             # Separate the row and column part of the input
             row_str, col_text = target[:-1], target[-1]
@@ -152,22 +153,22 @@ def fire_ammo(board, target_board, player_name):
             # Check if the row part is numeric
             if not row_str.isdigit():
                 raise ValueError(Fore.YELLOW + f"Invalid row: {row_str}. Row"
-                                 " should be a number.")
+                                 f" should be between 1 and {board.boards}.")
 
             row = int(row_str)
-            col_range = COL_RANGES[board.boards]
+            col_range = COL_RANGES[boards]
 
             # Check if the column part is valid
             if col_text not in col_range:
                 raise ValueError(Fore.YELLOW + f"Invalid column: {col_text}."
-                                 " Column should be one of {col_range}.")
+                                 f" Column should be one of {col_range}.")
 
             col_index = col_range.index(col_text)
 
             # Check if the row is within the valid range
             if row not in range(1, board.boards + 1):
                 raise ValueError(Fore.YELLOW + f"Invalid row: {row}. Row"
-                                 " should be between 1 and {board.boards}.")
+                                 f" should be between 1 and {board.boards}.")
 
             # Fire ammo and check if the game should end
             print(Fore.CYAN + f"{player_name} firing at {row}{col_text}...")
@@ -226,7 +227,7 @@ while True:
 
         if not boards.isdigit():
             raise ValueError(Fore.YELLOW
-                             + "No text or symbols allowed. "
+                             + "No text, symbols or blank entries allowed. "
                                "Please try again.")
         boards = int(boards)  # Convert the input to an integer
         x = BattleShipBoard(boards)
@@ -254,8 +255,8 @@ def get_user_ship_coordinates(ship_name, ship_size, board_size):
                 exit_game()
 
             if orientation not in ['H', 'V']:
-                raise ValueError(Fore.YELLOW + "Please enter H for Horizontal"
-                                 f" or V for Vertical.")
+                raise ValueError(Fore.YELLOW + "No symbols or blank"
+                                 " entries allowed. Please try again.")
         except ValueError as e:
             print(Fore.YELLOW + f"Invalid input: {e}")
 
@@ -267,13 +268,43 @@ def get_user_ship_coordinates(ship_name, ship_size, board_size):
             if input_coordinates.lower() == 'exit':
                 exit_game()
 
+            # Ensure the input is at least 2 characters long
+            if len(input_coordinates) < 2:
+                raise ValueError(Fore.YELLOW + "No symbols or blank entries"
+                                 " allowed, Please enter a valid row number"
+                                 " and column letter (e.g., 3C).")
+
+            # Separate the row and column part of the input
+            row_str, col_text = input_coordinates[:-1], input_coordinates[-1]
+
+            # Check if the row part is numeric
+            if not row_str.isdigit():
+                raise ValueError(Fore.YELLOW + f"Invalid row: {row_str}. Row"
+                                 f" should be between 1 and {boards}.")
+
+            row = int(row_str)
+            col_range = COL_RANGES[boards]
+
+            # Check if the column part is valid
+            if col_text not in col_range:
+                raise ValueError(Fore.YELLOW + f"Invalid column: {col_text}."
+                                 f" Column should be one of {col_range}.")
+
+            col_index = col_range.index(col_text)
+
+            # Check if the row is within the valid range
+            if row not in range(1, boards + 1):
+                raise ValueError(Fore.YELLOW + f"Invalid row: {row}. Row"
+                                 f" should be between 1 and {boards}.")
+
             if (
                 len(input_coordinates) < 2
                 or not input_coordinates[:-1].isdigit()
                 or not input_coordinates[-1].isalpha()
             ):
                 raise ValueError(
-                    Fore.YELLOW + "Please enter a valid row number and"
+                    Fore.YELLOW + "No symbols or blank entries allowed, Please"
+                    " enter a valid row number and"
                     " column letter (e.g., 3C)."
                 )
 
@@ -360,7 +391,7 @@ def create_ships(board_size, is_computer=False):
 
             if not is_computer:
                 print(Fore.CYAN + "Ships cannot overlap. Please enter"
-                      " a new row and column for the ship.\n")
+                      " a new row number and column letter for the ship.\n")
 
         for ship_cell in ship_coords:
             row, col = ship_cell
