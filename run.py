@@ -42,9 +42,8 @@ def welcome_screen():
 # Game instructions
 instructions = """
 1. Select a board size either:
-   i. 5 (5x5) - 3 ships: Scout (2), Frigate (3), Corvette (3).
-   ii. 8 (8x8) - 5 ships: Scout (2), Frigate (3), Corvette (3), Destroyer (4),
-   Battleship (5).
+   i. 5 (5x5) - which has 3 ships: Scout (2), Frigate (3), Corvette (3).
+   ii. 8 (8x8) - which has 5 ships: Scout (2), Frigate (3), Corvette (3), Destroyer (4), Battleship (5).
 2. Position your ships on the board:
    i. Ships cannot overlap.
    ii. Ships can be horizontal or vertical, not diagonal.
@@ -52,14 +51,15 @@ instructions = """
 3. Let the battle begin:
    i. Enter the row and column to fire at.
    ii. Hit - "x", Miss - "-".
-4. The game ends when all ships are sunk, ammo runs out, or you type "exit".
+4. The game ends when all enemy ships are sunk, ammo runs out, or you type "exit" at any of the input requests.
 
 colour codes:
-    i. Green - Input requests and your ships.
-    ii. Red - Hit.
-    iii. Blue - Miss.
-    iv. Cyan - Game messages.
-    v. Yellow - Error messages.
+    i. White - Board.
+    ii. Green - Input requests and your ships.
+    iii. Red - Hit.
+    iv. Blue - Miss.
+    v. Cyan - Game messages.
+    vi. Yellow - Error messages.
 """
 
 welcome_screen()
@@ -255,7 +255,7 @@ def get_user_ship_coordinates(ship_name, ship_size, board_size):
                 exit_game()
 
             if orientation not in ['H', 'V']:
-                raise ValueError(Fore.YELLOW + "No symbols or blank"
+                raise ValueError(Fore.YELLOW + "No numbers, symbols or blank"
                                  " entries allowed. Please try again.")
         except ValueError as e:
             print(Fore.YELLOW + f"Invalid input: {e}")
@@ -411,6 +411,8 @@ def create_ships(board_size, is_computer=False):
 def play_game(board_size):
     # Initialize the game boards
     player_board = BattleShipBoard(board_size)
+    print(Fore.CYAN + "Player's board (empty):\n")
+    player_board.print_board(reveal_ships=False) 
     player_ships = create_ships(player_board.boards)
     computer_board = BattleShipBoard(board_size)
     computer_ships = create_ships(computer_board.boards, is_computer=True)
