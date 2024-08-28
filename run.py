@@ -43,7 +43,8 @@ def welcome_screen():
 instructions = """
 1. Select a board size either:
    i. 5 (5x5) - which has 3 ships: Scout (2), Frigate (3), Corvette (3).
-   ii. 8 (8x8) - which has 5 ships: Scout (2), Frigate (3), Corvette (3), Destroyer (4), Battleship (5).
+   ii. 8 (8x8) - which has 5 ships: Scout (2), Frigate (3), Corvette (3),
+       Destroyer (4), Battleship (5).
 2. Position your ships on the board:
    i. Ships cannot overlap.
    ii. Ships can be horizontal or vertical, not diagonal.
@@ -51,9 +52,10 @@ instructions = """
 3. Let the battle begin:
    i. Enter the row and column to fire at.
    ii. Hit - "x", Miss - "-".
-4. The game ends when all enemy ships are sunk, ammo runs out, or you type "exit" at any of the input requests.
+4. The game ends when all enemy ships are sunk, ammo runs out, or you type
+   "exit" at any of the input requests.
 
-colour codes:
+Colour codes:
     i. White - Board.
     ii. Green - Input requests and your ships.
     iii. Red - Hit.
@@ -412,7 +414,7 @@ def play_game(board_size):
     # Initialize the game boards
     player_board = BattleShipBoard(board_size)
     print(Fore.CYAN + "Player's board (empty):\n")
-    player_board.print_board(reveal_ships=False) 
+    player_board.print_board(reveal_ships=False)
     player_ships = create_ships(player_board.boards)
     computer_board = BattleShipBoard(board_size)
     computer_ships = create_ships(computer_board.boards, is_computer=True)
