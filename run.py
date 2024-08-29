@@ -127,7 +127,7 @@ def fire_ammo(board, target_board, player_name):
     # Check if the player has run out of ammo at the beginning
     if board.ammo <= 0:
         print(Fore.CYAN + f"{player_name} is out of ammo!")
-        return True
+        return True if player_name == "Computer" else False
 
     while True:
         try:
@@ -158,7 +158,7 @@ def fire_ammo(board, target_board, player_name):
                                  f" should be between 1 and {board.boards}.")
 
             row = int(row_str)
-            col_range = COL_RANGES[boards]
+            col_range = COL_RANGES[board.boards]
 
             # Check if the column part is valid
             if col_text not in col_range:
@@ -199,7 +199,7 @@ def fire_ammo(board, target_board, player_name):
             board.ammo -= 1
             print(Fore.CYAN + f"{player_name}, remaining ammo: {board.ammo}")
 
-            # End the game if ammo reaches 0 after firing
+            # End the game if the computer is out of ammo after firing
             if board.ammo <= 0:
                 print(Fore.CYAN + f"{player_name} is out of ammo!")
                 return True
@@ -428,10 +428,10 @@ def play_game(board_size):
 
     # Main game loop
     player_turn = True
+
     while True:
         if player_turn:
-            if fire_ammo(player_board, computer_board, "Player"):
-                break
+            fire_ammo(player_board, computer_board, "Player")
         else:
             if fire_ammo(computer_board, player_board, "Computer"):
                 break
