@@ -359,41 +359,48 @@ def create_ships(board_size, is_computer=False):
 
     for ship_name, ship_size in ship_dict.items():
         while True:
-            if is_computer:
-                orientation = random.choice(['H', 'V'])
-                start_row = random.choice(row_range)
-                start_col = random.choice(col_range)
-                start_col_index = col_range.index(start_col)
-                if orientation == 'H':
-                    if start_col_index + ship_size <= board_size:
-                        ship_coords = [
-                            (start_row, start_col_index + i)
-                            for i in range(ship_size)
-                        ]
+            try:
+                if is_computer:
+                    orientation = random.choice(['H', 'V'])
+                    start_row = random.choice(row_range)
+                    start_col = random.choice(col_range)
+                    start_col_index = col_range.index(start_col)
+                    if orientation == 'H':
+                        if start_col_index + ship_size <= board_size:
+                            ship_coords = [
+                                (start_row, start_col_index + i)
+                                for i in range(ship_size)
+                            ]
 
+                        else:
+                            continue
                     else:
-                        continue
+                        if start_row + ship_size - 1 <= board_size:
+                            ship_coords = [
+                                (start_row + i, start_col_index)
+                                for i in range(ship_size)
+                            ]
+
+                        else:
+                            continue
                 else:
-                    if start_row + ship_size - 1 <= board_size:
-                        ship_coords = [
-                            (start_row + i, start_col_index)
-                            for i in range(ship_size)
-                        ]
+                    ship_coords = get_user_ship_coordinates(ship_name,
+                                                            ship_size,
+                                                            board_size)
 
-                    else:
-                        continue
-            else:
-                ship_coords = get_user_ship_coordinates(ship_name, ship_size,
-                                                        board_size)
+                if not any(cell in coords
+                           for cell in ship_coords
+                           for coords in ships.values()):
+                    ships[ship_name] = ship_coords
+                    break
 
-            if not any(cell in coords
-                       for cell in ship_coords for coords in ships.values()):
-                ships[ship_name] = ship_coords
-                break
+                if not is_computer:
+                    raise ValueError(Fore.YELLOW + "Ships cannot overlap."
+                                     " Please enter a new row number and"
+                                     " column letter for the ship.\n")
 
-            if not is_computer:
-                print(Fore.CYAN + "Ships cannot overlap. Please enter"
-                      " a new row number and column letter for the ship.\n")
+            except ValueError as e:
+                print(Fore.YELLOW + f"Invalid input: {e}")
 
         for ship_cell in ship_coords:
             row, col = ship_cell
