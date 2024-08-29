@@ -1,4 +1,4 @@
-![battleship](assets/images/screenshots/Battleships.png)
+![battleships](assets/images/screenshots/Battleships.png)
 
 # Battleship Game
 
