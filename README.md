@@ -1,4 +1,5 @@
 ![battleships](assets/images/screenshots/BattleShips.png)
+- figure 1 - Main screen
 
 # Battleship Game
 
@@ -26,6 +27,7 @@ The Battleship Game provides users with a fun and engaging way to play the class
 My design process consisted of thinking of each logic step in the game then creating a flowchart detailing the steps as seen below. 
 
 ![flowchart](assets/images/flowchart.png)
+- figure 2 - Design flowchart
 
 ### Playing the game
 
@@ -56,6 +58,7 @@ I have tested this project by:
 - Actual Result: The game started without any errors and displayed the opening screen.
 
 ![game_initialisation](assets/images/screenshots/GameInitialisation.png)
+- figure 3 - Game initialisation
 
 #### Test 2: Board Size Selection
 
@@ -64,6 +67,7 @@ I have tested this project by:
 - Actual Result: The game accepted the input of the board size, displayed the board and proceeded to ship placement.
 
 ![board_size_selection](assets/images/screenshots/BoardSizeSelection.png)
+- figure 4 - Board size selection
 
 #### Test 3: Invalid Board Size Selection
 
@@ -72,6 +76,7 @@ I have tested this project by:
 - Actual Result: The game rejected the input of the board size and prompted the user to choose a valid board size.
 
 ![invalid_board_size_selection](assets/images/screenshots/InvalidBoardSizeSelection.png)
+- figure 5 - Invalid board size selection
 
 #### Test 4: Ship Placement
 
@@ -80,8 +85,13 @@ I have tested this project by:
 - Actual Result: Ships are placed according to the player's input, and the board is displayed with the updated layout.
 
 ![ship_placement_1](assets/images/screenshots/ShipPlacement1.png)
+- figure 6 - First ship placement
+
 ![ship_placement_2](assets/images/screenshots/ShipPlacement2.png)
+- figure 7 - Second ship placement
+
 ![ship_placement_3](assets/images/screenshots/ShipPlacement3.png)
+- figure 8 - Third ship placement
 
 #### Test 5: Invalid Ship Placement
 
@@ -90,6 +100,7 @@ I have tested this project by:
 - Actual Result: The game rejected the placement and prompted the user to choose a valid position.
 
 ![invalid_ship_placement](assets/images/screenshots/InvalidShipPlacement.png)
+- figure 9 - Invalid ship placement
 
 #### Test 6: Attack
 
@@ -98,6 +109,7 @@ I have tested this project by:
 - Actual Result: The game updated the board to reflect a hit or miss and displayed ammo remaining for the player and the computer.
 
 ![attack](assets/images/screenshots/Attack.png)
+- figure 10 - Attack
 
 #### Test 7: Invalid Attack
 
@@ -106,6 +118,7 @@ I have tested this project by:
 - Actual Result: The game displayed a clear and consice error message and prompted for valid input.
 
 ![invalid_attack](assets/images/screenshots/InvalidAttack.png)
+- figure 11 - Invalid attack
 
 #### Test 8: Error Handling
 
@@ -114,6 +127,7 @@ I have tested this project by:
 - Actual Result: The game displayed a clear and consice error message and prompted for valid input.
 
 ![error_handling](assets/images/screenshots/ErrorHandling.png)
+- figure 12 - Error handling
 
 #### Test 9: Game End
 
@@ -122,6 +136,7 @@ I have tested this project by:
 - Actual Result: The game declared a winner and exited.
 
 ![end_game](assets/images/screenshots/EndGame.png)
+- figure 13 - End game
 
 ## Deployment
 
