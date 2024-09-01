@@ -1,4 +1,4 @@
-![battleships](assets/images/screenshots/BattleShips.png)
+![battleships](assets/images/screenshots/battleShips.png)
 - figure 1 - Main screen
 
 # Battleship Game
@@ -51,7 +51,7 @@ I have tested this project by:
 
 ### Manual Testing
 
-#### Test 1: Game Initialization
+#### Test 1: Game Initialisation
 
 - Step: Launch the game in a terminal.
 - Expected Result: The game should start without errors and display the opening screen.
@@ -126,7 +126,7 @@ I have tested this project by:
 - Expected Result: The game should display a clear and consice error message and prompt for valid input.
 - Actual Result: The game displayed a clear and consice error message and prompted for valid input.
 
-![error_handling](assets/images/screenshots/ErrorHandling.png)
+![error_handling](assets/images/screenshots/errorHandling.png)
 - figure 12 - Error handling
 
 #### Test 9: Game End
